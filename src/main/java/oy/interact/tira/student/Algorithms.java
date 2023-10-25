@@ -13,7 +13,18 @@ public class Algorithms {
    ///////////////////////////////////////////
 
    public static <T extends Comparable<T>> void insertionSort(T[] array) {
-      // TODO: Student, implement this.
+      //Based on pseudocode from https://en.wikipedia.org/wiki/Insertion_sort
+      for(int i = 1; i < array.length;i++){
+         int j = i;
+         while(j > 0 && (array[j-1].compareTo(array[j]) > 0)){
+            T temp = array[j-1];
+            array[j-1] = array[j];
+            array[j] = temp;
+
+            j--;
+         }
+      }
+
    }
 
    ///////////////////////////////////////////
