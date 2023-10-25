@@ -11,7 +11,7 @@ public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E
 
 	private static final int DEFAULT_ARRAY_SIZE = 20;
 
-	private E [] array = null;
+	private E[] array = null;
 	private Class<E> clazz;
 
 	private int count = 0;
@@ -183,19 +183,23 @@ public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E
 
 	@Override
 	public void reverse() {
-		// TODO: Student: finish this as part of task 02.
+		Algorithms.reverse(this.array, 0, count);
 	}
 
-	// TEACHERS: TODO: Remove the call to Algorithms sort method.
 	@Override
 	public void sort() {
-		// TODO: Student: finish this as part of task 02.
+		if (this.isSorted())
+			return;
+		Algorithms.insertionSort(this.array, 0, count);
+		this.sorted = true;
 	}
 
-	// TEACHERS: TODO: Remove the call to Algorithms sort method.
 	@Override
 	public void sort(Comparator<E> usingComparator) {
-		// TODO: Student: finish this as part of task 02.
+		if (this.isSorted())
+			return;
+		Algorithms.insertionSort(this.array, 0, count, usingComparator);
+		this.sorted = true;
 	}
 
 }
