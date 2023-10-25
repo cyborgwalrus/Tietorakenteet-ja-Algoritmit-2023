@@ -63,7 +63,7 @@ public class Algorithms {
    public static <T> void reverse(T[] array, int fromIndex, int toIndex) {
       int headIndex = fromIndex;
       int tailIndex = toIndex - 1;
-      while(headIndex < tailIndex) {
+      while (headIndex < tailIndex) {
          T temp = array[headIndex];
          array[headIndex] = array[tailIndex];
          array[tailIndex] = temp;
