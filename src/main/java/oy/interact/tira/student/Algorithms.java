@@ -33,22 +33,28 @@ public class Algorithms {
       insertionSort(array,0,array.length);
    }
 
+   ////////////////////////////////////////////////////////////
+   // Insertion Sort for slice of the array using a Comparator
+   ////////////////////////////////////////////////////////////
+   public static <T> void insertionSort(T[] array, int fromIndex, int toIndex, Comparator<T> comparator) {
+       //Based on pseudocode from https://en.wikipedia.org/wiki/Insertion_sort
+      for(int i = fromIndex; i < toIndex;i++){
+         int j = i;
+         while(j > 0 && (comparator.compare(array[j-1],array[j]) > 0)){
+            T temp = array[j-1];
+            array[j-1] = array[j];
+            array[j] = temp;
 
+            j--;
+         }
+      }
+   }
 
    //////////////////////////////////////////////////////////
    // Insertion Sort for the whole array using a Comparator
    //////////////////////////////////////////////////////////
-
    public static <T> void insertionSort(T[] array, Comparator<T> comparator) {
-      // TODO: Student, implement this.
-   }
-
-   ////////////////////////////////////////////////////////////
-   // Insertion Sort for slice of the array using a Comparator
-   ////////////////////////////////////////////////////////////
-
-   public static <T> void insertionSort(T[] array, int fromIndex, int toIndex, Comparator<T> comparator) {
-      // TODO: Student, implement this.
+      insertionSort(array, 0, array.length, comparator);
    }
 
    ///////////////////////////////////////////
