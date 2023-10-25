@@ -61,10 +61,6 @@ public class Coder implements Comparable<Coder> {
 	public String getFullName() {
 		return lastName + " " + firstName;
 	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
 	
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
@@ -72,6 +68,10 @@ public class Coder implements Comparable<Coder> {
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 
 	public void setPhoneNumber(String phoneNumber) {
@@ -175,7 +175,7 @@ public class Coder implements Comparable<Coder> {
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// TODO: Students: implement the two methods below following the instructions _carefully_!
+	// Students: implement the two methods below following the instructions _carefully_!
 	// Expecially see the note in the class comment above, and the comments below.
 	////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -187,12 +187,25 @@ public class Coder implements Comparable<Coder> {
 	 * in containers having the same name (as happens in real world), but still
 	 * can identify them as different Coders using the Coder.id.
 	 * 
-	 * TODO: Implement compareTo so that the order of coders ordered by using this methos
+	 * Implement compareTo so that the order of coders ordered by using this methos
 	 * will be natural order. Meaning, alphabetical order A...Ö (by lastname-firstname order).
 	 */
+
+	 private int compareLastNames(Coder another){
+		return this.getLastName().compareTo(another.getLastName());
+	 }
+
+	 private int compareFirstNames(Coder another){
+		return this.getFirstName().compareTo(another.getFirstName());
+	 }
 	@Override
 	public int compareTo(Coder another) {
-		return 0;
+		int result = compareLastNames(another);
+		if(result == 0){
+				return compareFirstNames(another);
+		}
+		return result;
+
 	}
 
 	/**
