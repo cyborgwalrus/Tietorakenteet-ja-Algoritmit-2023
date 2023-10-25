@@ -9,12 +9,11 @@ public class Algorithms {
    }
 
    ///////////////////////////////////////////
-   // Insertion Sort for the whole array
+   // Insertion Sort for a slice of the array
    ///////////////////////////////////////////
-
-   public static <T extends Comparable<T>> void insertionSort(T[] array) {
+   public static <T extends Comparable<T>> void insertionSort(T[] array, int fromIndex, int toIndex) {
       //Based on pseudocode from https://en.wikipedia.org/wiki/Insertion_sort
-      for(int i = 1; i < array.length;i++){
+      for(int i = fromIndex; i < toIndex;i++){
          int j = i;
          while(j > 0 && (array[j-1].compareTo(array[j]) > 0)){
             T temp = array[j-1];
@@ -28,12 +27,13 @@ public class Algorithms {
    }
 
    ///////////////////////////////////////////
-   // Insertion Sort for a slice of the array
+   // Insertion Sort for the whole array
    ///////////////////////////////////////////
-
-   public static <T extends Comparable<T>> void insertionSort(T[] array, int fromIndex, int toIndex) {
-      // TODO: Student, implement this.
+   public static <T extends Comparable<T>> void insertionSort(T[] array) {
+      insertionSort(array,0,array.length);
    }
+
+
 
    //////////////////////////////////////////////////////////
    // Insertion Sort for the whole array using a Comparator
