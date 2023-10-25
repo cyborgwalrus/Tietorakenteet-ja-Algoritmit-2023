@@ -12,12 +12,12 @@ public class Algorithms {
    // Insertion Sort for a slice of the array
    ///////////////////////////////////////////
    public static <T extends Comparable<T>> void insertionSort(T[] array, int fromIndex, int toIndex) {
-      //Based on pseudocode from https://en.wikipedia.org/wiki/Insertion_sort
-      for(int i = fromIndex; i < toIndex;i++){
+      // Based on pseudocode from https://en.wikipedia.org/wiki/Insertion_sort
+      for (int i = fromIndex; i < toIndex; i++) {
          int j = i;
-         while(j > 0 && (array[j-1].compareTo(array[j]) > 0)){
-            T temp = array[j-1];
-            array[j-1] = array[j];
+         while (j > 0 && (array[j - 1].compareTo(array[j]) > 0)) {
+            T temp = array[j - 1];
+            array[j - 1] = array[j];
             array[j] = temp;
 
             j--;
@@ -30,19 +30,19 @@ public class Algorithms {
    // Insertion Sort for the whole array
    ///////////////////////////////////////////
    public static <T extends Comparable<T>> void insertionSort(T[] array) {
-      insertionSort(array,0,array.length);
+      insertionSort(array, 0, array.length);
    }
 
    ////////////////////////////////////////////////////////////
    // Insertion Sort for slice of the array using a Comparator
    ////////////////////////////////////////////////////////////
    public static <T> void insertionSort(T[] array, int fromIndex, int toIndex, Comparator<T> comparator) {
-       //Based on pseudocode from https://en.wikipedia.org/wiki/Insertion_sort
-      for(int i = fromIndex; i < toIndex;i++){
+      // Based on pseudocode from https://en.wikipedia.org/wiki/Insertion_sort
+      for (int i = fromIndex; i < toIndex; i++) {
          int j = i;
-         while(j > 0 && (comparator.compare(array[j-1],array[j]) > 0)){
-            T temp = array[j-1];
-            array[j-1] = array[j];
+         while (j > 0 && (comparator.compare(array[j - 1], array[j]) > 0)) {
+            T temp = array[j - 1];
+            array[j - 1] = array[j];
             array[j] = temp;
 
             j--;
@@ -58,23 +58,27 @@ public class Algorithms {
    }
 
    ///////////////////////////////////////////
-   // Reversing an array
-   ///////////////////////////////////////////
-
-   public static <T> void reverse(T[] array) {
-      // TODO: Student, implement this.
-   }
-
-   ///////////////////////////////////////////
    // Reversing a slice of an array
    ///////////////////////////////////////////
-
    public static <T> void reverse(T[] array, int fromIndex, int toIndex) {
-      // TODO: Student, implement this.
+      int headIndex = fromIndex;
+      int tailIndex = toIndex - 1;
+      while(headIndex < tailIndex) {
+         T temp = array[headIndex];
+         array[headIndex] = array[tailIndex];
+         array[tailIndex] = temp;
+
+         headIndex++;
+         tailIndex--;
+      }
    }
 
-
-
+   ///////////////////////////////////////////
+   // Reversing an array
+   ///////////////////////////////////////////
+   public static <T> void reverse(T[] array) {
+      reverse(array, 0, array.length);
+   }
 
    ///////////////////////////////////////////
    // Binary search bw indices
@@ -92,15 +96,15 @@ public class Algorithms {
       return -1;
    }
 
-   public static <E extends Comparable<E>> void fastSort(E [] array) {
+   public static <E extends Comparable<E>> void fastSort(E[] array) {
       // TODO: Student, implement this.
    }
 
-   public static <E> void fastSort(E [] array, Comparator<E> comparator) {
+   public static <E> void fastSort(E[] array, Comparator<E> comparator) {
       // TODO: Student, implement this.
    }
 
-   public static <E> void fastSort(E [] array, int fromIndex, int toIndex, Comparator<E> comparator) {
+   public static <E> void fastSort(E[] array, int fromIndex, int toIndex, Comparator<E> comparator) {
       // TODO: Student, implement this.
    }
 
