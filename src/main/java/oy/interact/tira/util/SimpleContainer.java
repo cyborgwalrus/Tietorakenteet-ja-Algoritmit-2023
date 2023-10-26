@@ -13,6 +13,7 @@ public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E
 
 	private E[] array = null;
 	private Class<E> clazz;
+	private Comparator<E> currentComparator;
 
 	private int count = 0;
 	private int reallocationCount = 0;
@@ -29,6 +30,14 @@ public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E
 		array = (E[]) Array.newInstance(clazz, capacity);
 		count = 0;
 		reallocationCount = 0;
+	}
+
+	public Comparator<E> getCurrenComparator() {
+		return this.currentComparator;
+	}
+
+	public void setCurrentComparator(Comparator<E> comparator) {
+		this.currentComparator = comparator;
 	}
 
 	@Override
@@ -196,9 +205,11 @@ public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E
 
 	@Override
 	public void sort(Comparator<E> usingComparator) {
-		if (this.isSorted())
+		if (this.isSorted() &&
+				usingComparator == getCurrenComparator())
 			return;
 		Algorithms.insertionSort(this.array, 0, count, usingComparator);
+		setCurrentComparator(usingComparator);
 		this.sorted = true;
 	}
 
