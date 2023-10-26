@@ -69,12 +69,11 @@ public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E
 
 	@Override
 	public E get(E element) throws IllegalArgumentException {
-		E foundElement = null;
 		for (int i = 0; i < count; i++) {
-			if (array[i].equals(element))
-				foundElement = element;
+			if (element.equals(array[i]))
+				return element;
 		}
-		return foundElement;
+		return null;
 	}
 
 	@Override
