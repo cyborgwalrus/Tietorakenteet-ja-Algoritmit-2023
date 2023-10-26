@@ -72,7 +72,7 @@ Lokitiedoista voidaan päätellä, että lajittelu on erittäin nopea kun vaihde
 
 ### Muita mietteitä
 Tehtävä sujui muuten ongelmitta, mutta jämähdin pariksi tunniksi bugiin, jossa koodareiden kaverit olivat kaikki arvoltaan `null null`. Ensiksi tuhlasin aikaani ihmettelemällä miksi breakpointtini eivät toimi. Siihen auttaa että muistaa painaa Run-napin sijasta Debug.  
-Tunnin koodisukelluksen ja rivi kerrallaan debugaamisen jälkeen löysin viimein bugin sijainnin. Olin `SimpleContainer.get()` funktiota tehdessäni epähuomiossa palauttanut pelkästään hakua varten luodun id-kenttää lukuun ottamatta tyhjän elementin `element` enkä taulukosta löytynyttä elementtiä `array[i]`.
+Tunnin koodisukelluksen ja rivi kerrallaan debugaamisen jälkeen löysin viimein bugin sijainnin. Olin `SimpleContainer.get()` funktiota tehdessäni epähuomiossa palauttanut pelkästään hakua varten luodun id-kenttää lukuun ottamatta tyhjän elementin `element` enkä taulukosta löytynyttä elementtiä `array[i]`. Opinpahan ainakin että joskus mitä yksinkertaisimpienkin bugien etsimiseen voi mennä suhteettoman paljon aikaa.
 
 ## 03-TASK
 
