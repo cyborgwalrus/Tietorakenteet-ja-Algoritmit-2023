@@ -51,7 +51,7 @@ Add-algoritmin pitäisi ensisilmäyksellä olla luokkaa $O(n)$ koska se sisält�
 
 ### Search-algoritmi
 ![search](task-02-graph-search.png)
-Kuten tehtävänannossa jo paljastettiin, ovat haku-algoritmit lineaarisia ja koodista olevien yksittäisten n-kokoisten for-silmukoiden perusteella päädymme samaan lopputulokseen, eli $O(n)$. Toisin sanottuna algoritmi käy *lineaarisesti* koko taulukon elementti kerrallaan kunnes se löytää etsimänsä.  
+Kuten tehtävänannossa jo paljastettiin, ovat haku-algoritmit lineaarisia ja koodista olevien yksittäisten n-kokoisten for-silmukoiden perusteella päädymme samaan lopputulokseen, eli $O(n)$. Toisin sanottuna algoritmi käy *lineaarisesti* läpi koko taulukon elementti kerrallaan kunnes se löytää etsimänsä.  
 
 Vaikka kaaviolle parhaan $R^2$ arvon $0,55$ trendiviiva löytyi toisen asteen polynomiregressiolla, se ei ole $R^2$ pienuuden vuoksi kovin vakuuttava. Silmämääräisesti arvioituna trendiviiva poikkeaa lineaarisesta vain marginaalisesti, jos suurimmat piikit hakuajassa jätetään huomioimatta.
 
