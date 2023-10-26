@@ -70,8 +70,8 @@ public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E
 	@Override
 	public E get(E element) throws IllegalArgumentException {
 		for (int i = 0; i < count; i++) {
-			if (element.equals(array[i]))
-				return element;
+			if (array[i].equals(element))
+				return array[i];
 		}
 		return null;
 	}
