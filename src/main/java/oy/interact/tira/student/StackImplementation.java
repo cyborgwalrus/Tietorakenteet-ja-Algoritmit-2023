@@ -45,6 +45,7 @@ public class StackImplementation<E> implements StackInterface<E> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public E pop() throws IllegalStateException{
         if(this.top == -1 || this.itemArray[top] == null)
             throw new IllegalStateException();
@@ -55,6 +56,7 @@ public class StackImplementation<E> implements StackInterface<E> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public E peek() throws IllegalStateException{
         if(this.top == -1)
             throw new IllegalStateException();
@@ -77,7 +79,7 @@ public class StackImplementation<E> implements StackInterface<E> {
 
     @Override
     public void clear(){
-        this.itemArray = new Object[capacity];
+        this.itemArray = new Object[DEFAULT_STACK_SIZE];
         this.top = -1;
     }
 
