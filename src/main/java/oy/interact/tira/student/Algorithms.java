@@ -80,19 +80,54 @@ public class Algorithms {
       reverse(array, 0, array.length);
    }
 
+   //Helper function for binary search.
+   //For avoiding an infinite loop in cases where
+   // (high-low)/2 rounds to 0
+   private static int max(int int1, int int2){
+      if(int1 > int2)
+         return int1;
+      return int2;
+   }
+
    ///////////////////////////////////////////
    // Binary search bw indices
    ///////////////////////////////////////////
-
    public static <T extends Comparable<T>> int binarySearch(T aValue, T[] fromArray, int fromIndex, int toIndex) {
+      // Iterative implementation
+      int low = fromIndex;
+      int high = toIndex-1;
+      int middle = -1;
+      while (low != high) {
+         middle = low + max(((high - low) / 2), 1);
+         if (aValue.compareTo(fromArray[middle]) < 0)
+            high = middle - 1;
+         else
+            low = middle;
+      }
+
+      if (aValue.equals(fromArray[low]))
+         return low;
       return -1;
    }
 
    ///////////////////////////////////////////
    // Binary search using a Comparator
    ///////////////////////////////////////////
-
    public static <T> int binarySearch(T aValue, T[] fromArray, int fromIndex, int toIndex, Comparator<T> comparator) {
+      // Iterative implementation
+      int low = fromIndex;
+      int high = toIndex-1;
+      int middle = -1;
+      while (low != high) {
+         middle = low + max(((high - low) / 2), 1);
+         if (comparator.compare(aValue, fromArray[middle]) < 0)
+            high = middle - 1;
+         else
+            low = middle;
+      }
+
+      if (aValue.equals(fromArray[low]))
+         return low;
       return -1;
    }
 
