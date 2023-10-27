@@ -114,7 +114,19 @@ Toteutin puolitushaun seuraten luentodiojen pseudokoodia, mikä johti ongelmiin.
 Toinen ongelma tuli vastaan TIRA Coders sovelluksessa. Kun koodareita haettiin Exact haulla, haku suoritettiin mutta ohjelma ei valinnut löydettyä koodaria. Askel kerrallaan debugaamalla virhe löytyi puolitushaun toteutuksestani. Olin epähuomiossa käyttänyt vertailussa `Coder.id` kenttää tarkastelevaa `.equals()` enkä nimellä vertaavaa `comparator.compare()`. Tästä syystä algoritmi ei koskaan palauttanut löydetyn koodarin indeksiä, joten ohjelma ei voinut myöskään valita löydettyä koodaria listasta.
 
 ## 04-TASK
+### Aikakompleksisuusvaatimukset
+- **capacity()**: yksi return, $O(1)$.
+- **push()**: Ei silmukoita, $O(1)$. Jos kutsutaan `reallocate()` yksi `for`-silmukka, $O(n)$.
+- **pop()**: Ei silmukoita tai funktiokutsuja, $O(1)$.
+- **peek()**: Ei silmukoita tai funktiokutsuja, $O(1)$.
+- **size()**: Yksi `if` ja yksi `return`, $O(1)$.
+- **isEmpty()**: Yksi `if` ja yksi `return`, $O(1)$.
+- **clear()**: Ei silmukoita, $O(1)$.
+- **toString()**: Yksi pinon mittainen `for`-silmukka, $O(n)$.
+### Muita mietteitä
+Jos tiedostossa on liikaa tai liian vähän lainausmerkkejä, tarkistin tulkitsee lainausmerkkien ulkopuolelle tarkoitetun tekstin olevan sen sisällä, johtaen siihen että tarkistin jättää valideja sulkuja laskematta ja heittää `ParenthesisException` kun ne eivät enää menekkään tasan.
 
+Yksityiskohtaisten kommenttien ja luentodiojen pseudokoodin avulla tehtävän tekeminen sujui melko ongelmitta. Eniten päänvaivaa tuotti sopivien Exceptionien hallinta ja heittäminen.
 ## 05-TASK
 
 ## 06-TASK
