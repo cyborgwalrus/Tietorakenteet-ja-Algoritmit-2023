@@ -68,16 +68,17 @@ public class ParenthesisChecker {
     *                                  reallocated if necessary.
     */
    public static int checkParentheses(StackInterface<Character> stack, String fromString) throws ParenthesesException {
-      // TODO:
-      // for each character in the input string
+
       int lineNumber = 1;
       int columnNumber = 0;
+      int parenthesisCount = 0;
+      char poppedChar = 0;
       boolean betweenQuotes = false;
       boolean parenthesisError = false;
+      // for each character in the input string
       for (int i = 0; i < fromString.length(); i++) {
          char c = fromString.charAt(i);
          columnNumber++;
-
          // if in between of quotes
          // ignore this character (but count column numbers)
          if (c != '"' && betweenQuotes)
@@ -93,14 +94,15 @@ public class ParenthesisChecker {
 
          switch (c) {
             case '\n':
-            lineNumber++;
-            columnNumber = 0;
-            break;
+               lineNumber++;
+               columnNumber = 0;
+               break;
             // if character is an opening parenthesis -- one of "([{"
             // push it into the stack (check for failure and throw an exception if so)
             case '(':
             case '[':
             case '{':
+               parenthesisCount++;
                try {
                   stack.push(c);
                } catch (Exception OutOfMemoryError) {
@@ -113,7 +115,13 @@ public class ParenthesisChecker {
             case ')':
             case ']':
             case '}':
-               char poppedChar = stack.pop();
+               parenthesisCount++;
+               try {
+                  poppedChar = stack.pop();
+               } catch (Exception e) {
+                  throw new ParenthesesException("Failed to pop from the stack", lineNumber, columnNumber,
+                        ParenthesesException.TOO_MANY_CLOSING_PARENTHESES);
+               }
                if (poppedChar == 0)
                   // if the popped item is null, throw an exception, there are too many closing
                   // parentheses
@@ -128,17 +136,20 @@ public class ParenthesisChecker {
                if (poppedChar == '{' && c != '}')
                   parenthesisError = true;
                // if they do not match -- opening was { but closing was ], for example.
-               // throw an exception, wrong kind of parenthesis were in the text (e.g. "asfa (asdf } sadf")
+               // throw an exception, wrong kind of parenthesis were in the text (e.g. "asfa
+               // (asdf } sadf")
                if (parenthesisError)
                   throw new ParenthesesException("Parenthesis didn't match.", lineNumber, columnNumber,
                         ParenthesesException.PARENTHESES_IN_WRONG_ORDER);
          }
       }
       // if the stack is not empty after all the characters have been handled
-      if(stack.isEmpty() == false)
       // throw an exception since the string has more opening than closing
       // parentheses.
-         throw new ParenthesesException("Parenthesis didn't match.", lineNumber, columnNumber, ParenthesesException.TOO_MANY_OPENING_PARENTHESES);
-      return 0;
+      if (stack.isEmpty() == false)
+         throw new ParenthesesException("Parenthesis didn't match.", lineNumber, columnNumber,
+               ParenthesesException.TOO_MANY_OPENING_PARENTHESES);
+
+      return parenthesisCount;
    }
 }
