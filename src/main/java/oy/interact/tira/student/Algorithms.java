@@ -126,7 +126,7 @@ public class Algorithms {
             low = middle;
       }
 
-      if (aValue.equals(fromArray[low]))
+      if (comparator.compare(aValue, fromArray[low])==0)
          return low;
       return -1;
    }
