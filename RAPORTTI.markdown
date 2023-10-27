@@ -109,7 +109,8 @@ Algoritmin toimintaperiaatteesta ja sen nimestä voidaan päätellä että sen a
 Puolitushakun haittapuolena on että se vaatii datan olevan lajiteltuna. Jos data ei ole suuruusjärjestyksessä, puolitushaulla on joka puolituksessa 50% todennäköisyys valita sama puolikas kuin missä etsitty alkio sijaitsee. Lineaarista hakua datan järjestämättömyys ei haittaa.
 
 ### Muita mietteitä
-Toteutin puolitushaun seuraten luentodiojen pseudokoodia, mikä johti ongelmiin. Toteutukseni jäi useasti loputtomaan silmukkaan tapauksissa, joissa `high - low == 1`. Silloin `(high-low)/2` pyöristyy nollaan ja silmukka jämähtää arvoon `medium = low` ja `low != high` ehto ei koskaan täyty. Ratkaisin ongelman apufunktiolla `max((high-low)/2), 1)` joka varmistaa että viimeisellä kierroksella kun $high == low + 1$, seuraa että $middle = low + 1 \rightarrow low = middle \rightarrow low == high$ joten silmukan katkeamisehto täyttyy.  
+Toteutin puolitushaun seuraten luentodiojen pseudokoodia, mikä johti ongelmiin. Toteutukseni jäi useasti loputtomaan silmukkaan tapauksissa, joissa `high - low == 1`. Silloin `(high-low)/2` pyöristyy nollaan ja silmukka jämähtää arvoon `medium = low` ja `low != high` ehto ei koskaan täyty. Ratkaisin ongelman apufunktiolla `max((high-low)/2), 1)` joka varmistaa että viimeisellä kierroksella kun $high == low + 1$, seuraa että $middle = low + 1 \rightarrow low = middle \rightarrow low == high$ joten silmukan katkeamisehto täyttyy. 
+ 
 Toinen ongelma tuli vastaan TIRA Coders sovelluksessa. Kun koodareita haettiin Exact haulla, haku suoritettiin mutta ohjelma ei valinnut löydettyä koodaria. Askel kerrallaan debugaamalla virhe löytyi puolitushaun toteutuksestani. Olin epähuomiossa käyttänyt vertailussa `Coder.id` kenttää tarkastelevaa `.equals()` enkä nimellä vertaavaa `comparator.compare()`. Tästä syystä algoritmi ei koskaan palauttanut löydetyn koodarin indeksiä, joten ohjelma ei voinut myöskään valita löydettyä koodaria listasta.
 
 ## 04-TASK
