@@ -75,6 +75,42 @@ Tehtävä sujui muuten ongelmitta, mutta jämähdin pariksi tunniksi bugiin, jos
 Tunnin koodisukelluksen ja rivi kerrallaan debugaamisen jälkeen löysin viimein bugin sijainnin. Olin `SimpleContainer.get()` funktiota tehdessäni epähuomiossa palauttanut pelkästään hakua varten luodun id-kenttää lukuun ottamatta tyhjän elementin `element` enkä taulukosta löytynyttä elementtiä `array[i]`. Opinpahan ainakin että joskus mitä yksinkertaisimpienkin bugien etsimiseen voi mennä suhteettoman paljon aikaa.
 
 ## 03-TASK
+### TIRA koodareiden puolitushaku
+>PhoneBookArray: Search took 40 ms  
+`Hain sukunimellä Öörni`  
+PhoneBookArray: Search took 39 ms  
+PhoneBookArray: Get coder by index took 0 ms  
+PhoneBookArray: Getting friend names took 21 ms  
+`Hain Exact haulla Öörnin koko nimen`  
+PhoneBookArray: Fast search took 0 ms 
+PhoneBookArray: Get coder by index took 0 ms  
+PhoneBookArray: Getting friend names took 10 ms  
+`Hain sukunimellä Aarni`  
+PhoneBookArray: Search took 0 ms  
+PhoneBookArray: Get coder by index took 0 ms  
+PhoneBookArray: Getting friend names took 11 ms  
+`Hain Exact haulla Aarnin koko nimen`  
+PhoneBookArray: Fast search took 0 ms  
+
+
+Nopea haku oli 50k aineistollakin niin nopea että se pyöristyy $0$ ms.
+Tavallinen haku oli suhteessa paljon hitaampi, johtuen siitä että se toimii lineaarisella haulla joka on luokkaa $O(n)$ kun taas puolitushakuhaku puolittaa hakualueensa joka kierroksella, joten sen luokka on $O(log n)$. Tämä huomataan myös lokitiedoista, missä listan alussa olevan nimen hakeminen oli erittäin nopeaa verrattuna listan lopussa olevaan nimeen.
+### Taulukon täyttö ja lajittelu
+![fill ja sort](task-3-graph-fill-sort.png)
+### Lineaarinen haku
+![search](task-02-graph-search.png)
+### Puolitushaku
+![binSearch](task-3-graph-binSearch.png)
+### Analyysi
+#### Lineaarinen haku
+Edellisen kappaleen päättelyjen ja viime taskissä kerätyn datan perusteella lineaarinen haku on aikakompleksisuusluokkaa $O(n)$. Algoritmi aloittaa taulukon alusta ja käy yksitellen kaikki sen alkiot läpi kunnes se löytää etsimänsä alkion, joka on pahimmassa tapauksessa listan lopussa paikalla $n$.
+#### Puolitushaku
+Algoritmin toimintaperiaatteesta ja sen nimestä voidaan päätellä että sen aikakompleksisuusluokka on $O(log n)$. Puolitushaku nimensä mukaisesti puolittaa joka kierroksella hakualueensa. Tämä tekee siitä huomattavasti nopeamman suurilla datamäärillä verrattuna lineaarihakuun.  
+Puolitushakun haittapuolena on että se vaatii datan olevan lajiteltuna. Jos data ei ole suuruusjärjestyksessä, puolitushaulla on joka puolituksessa 50% todennäköisyys valita sama puolikas kuin missä etsitty alkio sijaitsee. Lineaarista hakua datan järjestämättömyys ei haittaa.
+
+### Muita mietteitä
+Toteutin puolitushaun seuraten luentodiojen pseudokoodia, mikä johti ongelmiin. Toteutukseni jäi useasti loputtomaan silmukkaan tapauksissa, joissa `high - low == 1`. Silloin `(high-low)/2` pyöristyy nollaan ja silmukka jämähtää arvoon `medium = low` ja `low != high` ehto ei koskaan täyty. Ratkaisin ongelman apufunktiolla `max((high-low)/2), 1)` joka varmistaa että viimeisellä kierroksella kun $high == low + 1$, seuraa että $middle = low + 1 \rightarrow low = middle \rightarrow low == high$ joten silmukan katkeamisehto täyttyy.  
+Toinen ongelma tuli vastaan TIRA Coders sovelluksessa. Kun koodareita haettiin Exact haulla, haku suoritettiin mutta ohjelma ei valinnut löydettyä koodaria. Askel kerrallaan debugaamalla virhe löytyi puolitushaun toteutuksestani. Olin epähuomiossa käyttänyt vertailussa `Coder.id` kenttää tarkastelevaa `.equals()` enkä nimellä vertaavaa `comparator.compare()`. Tästä syystä algoritmi ei koskaan palauttanut löydetyn koodarin indeksiä, joten ohjelma ei voinut myöskään valita löydettyä koodaria listasta.
 
 ## 04-TASK
 
