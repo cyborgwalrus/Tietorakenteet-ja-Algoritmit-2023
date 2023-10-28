@@ -66,6 +66,7 @@ public class LinkedListQueue<E> implements QueueInterface<E> {
 
         E x = (E) this.head.data;
         this.head = this.head.next;
+        this.count--;
         return x;
 
     }
@@ -112,6 +113,7 @@ public class LinkedListQueue<E> implements QueueInterface<E> {
     public void clear() {
         this.tail = null;
         this.head = null;
+        this.count = 0;
     }
 
     public String toString() {
