@@ -69,12 +69,12 @@ public class QueueImplementation<E> implements QueueInterface<E> {
      * @throws QueueIsEmptyException If the queue is empty.
      */
     @Override
-    @SuppressWarnings("Unchecked")
+    @SuppressWarnings("unchecked")
     public E dequeue() throws IllegalStateException {
         if (this.count == 0)
             throw new IllegalStateException();
 
-        E x = (E) this.array[this.head];
+        E x = (E)this.array[this.head];
         this.head++;
         this.count--;
         if (this.head >= this.capacity)
@@ -90,7 +90,7 @@ public class QueueImplementation<E> implements QueueInterface<E> {
      * @throws QueueIsEmptyException If the queue is empty.
      */
     @Override
-    @SuppressWarnings("Unchecked")
+    @SuppressWarnings("unchecked")
     public E element() throws IllegalStateException {
         if (this.count == 0)
             throw new IllegalStateException();
