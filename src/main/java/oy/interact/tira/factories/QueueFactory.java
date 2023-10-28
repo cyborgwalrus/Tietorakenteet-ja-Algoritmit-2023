@@ -1,7 +1,7 @@
 package oy.interact.tira.factories;
 
-import oy.interact.tira.NotYetImplementedException;
 import oy.interact.tira.model.Coder;
+import oy.interact.tira.student.QueueImplementation;
 import oy.interact.tira.util.QueueInterface;
 
 public class QueueFactory {
@@ -11,22 +11,22 @@ public class QueueFactory {
 	}
 
 	public static QueueInterface<Integer> createIntegerQueue() {
-		throw new NotYetImplementedException("Task 05-TASK about Queues not yet implemented");
+		return new QueueImplementation<Integer>();
 	}
 
 	public static QueueInterface<Integer> createIntegerQueue(int capacity) {
-		throw new NotYetImplementedException("Task 05-TASK about Queues not yet implemented");
+		return new QueueImplementation<Integer>(capacity);
 	}
 
 	public static QueueInterface<String> createStringQueue() {
-		throw new NotYetImplementedException("Task 05-TASK about Queues not yet implemented");
+		return new QueueImplementation<String>();
 	}
 
 	public static QueueInterface<String> createStringQueue(int capacity) {
-		throw new NotYetImplementedException("Task 05-TASK about Queues not yet implemented");
+		return new QueueImplementation<String>(capacity);
 	}
 
 	public static QueueInterface<Coder> createCoderQueue() {
-		throw new NotYetImplementedException("Task 05-TASK about Queues not yet implemented");
+		return new QueueImplementation<Coder>();
 	}
 }
