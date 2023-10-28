@@ -35,7 +35,6 @@ Tarvittaessa käytä myös paremmin muotoiltuja taulukoita:
 
 Alaluvut jokaisen tehtävän raportille löydät alta.
 
-
 ## 01-TASK
 Hyvää harjoitusta toisten tekemän koodin lukemiseen ja olemassa olevan koodikannan sisällä toimimiseen. Yksikkötestit helpottivat algoritmin suunnittelua huomattavasti. `InsertionSortin` toteutus Wikipedian pseudokoodia soveltaen ei ollut hankalaa eikä ollut myöskään `Reverse` vaikka siihen en katsonut mallia.
 
@@ -44,6 +43,7 @@ Lajittelualgoritmin aikakompleksisuus on luokkaa $O(n^2)$ koska se sisältää k
 `Reverse`-algoritmissä kaksi indeksiä aloittavat listan eri päistä ja kohtaavat keskellä, mihin kuluu $n/2$ kierrosta. Täten algoritmin aikakompleksisuus on luokkaa $0(n)$. 
 
 Nousevassa järjestyksessä oleva taulukko kannattaa lajitella laskevaan järjestykseen `reverse`-algoritmilla koska $O(n)$ luokan algoritmina se skaalautuu paljon paremmin suurien taulukoiden käsittelyyn kuin luokkaa $O(n^2)$ oleva `insertionSort`.
+
 ## 02-TASK
 ### Add-algoritmi
 ![fill](task-02-graph-fill.png)
@@ -127,7 +127,41 @@ Toinen ongelma tuli vastaan TIRA Coders sovelluksessa. Kun koodareita haettiin E
 Jos tiedostossa on liikaa tai liian vähän lainausmerkkejä, tarkistin tulkitsee lainausmerkkien ulkopuolelle tarkoitetun tekstin olevan sen sisällä, johtaen siihen että tarkistin jättää valideja sulkuja laskematta ja heittää `ParenthesisException` kun ne eivät enää menekkään tasan.
 
 Yksityiskohtaisten kommenttien ja luentodiojen pseudokoodin avulla tehtävän tekeminen sujui melko ongelmitta. Eniten päänvaivaa tuotti sopivien Exceptionien hallinta ja heittäminen.
+
 ## 05-TASK
+###  ArrayQueue Aikakompleksisuusvaatimukset
+- **capacity()**: yksi return, $O(1)$.
+- **enqueue()**: Ei silmukoita, $O(1)$. Jos kutsutaan `reallocate()` yksi `for`-silmukka, $O(n)$.
+- **dequeue()**: Ei silmukoita tai funktiokutsuja, $O(1)$.
+- **element()**: Ei silmukoita tai funktiokutsuja, $O(1)$.
+- **size()**: Yksi `return`, $O(1)$.
+- **isEmpty()**: Yksi `if` ja yksi `return`, $O(1)$.
+- **clear()**: Ei silmukoita, $O(1)$.
+- **toString()**: Yksi jonon mittainen `for`-silmukka, $O(n)$.
+
+###  LinkedListQueue Aikakompleksisuusvaatimukset
+- **capacity()**: yksi return, $O(1)$.
+- **enqueue()**: Ei silmukoita, $O(1)$.
+- **dequeue()**: Ei silmukoita tai funktiokutsuja, $O(1)$.
+- **element()**: Ei silmukoita tai funktiokutsuja, $O(1)$.
+- **size()**: Yksi `return`, $O(1)$.
+- **isEmpty()**: Yksi `if` ja yksi `return`, $O(1)$.
+- **clear()**: Ei silmukoita, $O(1)$. 
+	- Javan oma `LinkedList`-toteutus käyttää $O(n)$ algoritmia joka nullaa yksitellen kaikki `Node`t mutta useiden Stackoverflow-postaajien mukaan roskienkerääjän pitäisi poistaa koko `LinkedList` kun sen `head` nullataan. Jos koodissa olisi `Iterator`-objekteja pitämässä `Node`-referenssejä muistissa, tämä ei toimisi.
+	- https://stackoverflow.com/questions/5658465/javadelete-all-the-elements-from-linked-list
+	- https://stackoverflow.com/questions/31069894/deleting-a-single-linked-list-by-just-making-head-null
+	- https://stackoverflow.com/questions/33935980/java-best-practice-regarding-clearing-a-linked-list
+- **toString()**: Yksi jonon mittainen `while`-silmukka, $O(n)$.
+
+### LinkedListQueue vs ArrayQueue
+Aikakompleksisuuden suhteen toteutukset ovat melkein tasaväkisiä. `ArrayQueue` jää hieman jälkeen kun se joutuu varaamaan lisää tilaa, pudottaen sen $O(1)$-luokasta luokkaan $O(n)$. `LinkedListi`n läpikäyminen on hitaampaa kuin `Array`n, mutta jonossa tätä meidän ei onneksi tarvitse tehdä, koska meitä kiinnostaa vain jonon ensimmäinen ja viimeinen elementti.
+
+Muistikompleksisuudessa `LinkedList` häviää `Array`lle koska sen pitää jokaisessa `Node`ssa säilyttämään muistissa viittauksen edelliseen ja seuraavaan `Node`en.
+
+Olettaisin myös että `ArrayQueue` saa pientä lisänopeutta paremmasta rekisterivälimuistien hyödyntämisestä koska sen data on muistissa peräkkäisissä muistiosoitteissa, mikä vähentää cache missejä.
+
+### Muita mietteitä
+`ArrayQueue`n toteutus sujui ongelmitta. Oli mielenkiintoista päästä käyttämään `LinkedList`iä oikeassa koodissa, tähän mennessä se on tullut vastaan vain pienessä C-kielen harjoitustehtävässä. Huomasin vasta TIRA coders sovelluksessa pienen bugin joka oli päässyt läpi yksikkötesteistä. Kun jonoa käytiin läpi, ei jäljellä olevien koodarien lukumäärä pienentynyt. Ohjelma ei kuitenkaan kaatunut kun päästiin jonon loppuun. Olin unohtanut pienentää `count`-muuttujaa kun `LinkedList`-jonosta poistettiin alkioita.
 
 ## 06-TASK
 
