@@ -132,6 +132,7 @@ public class Algorithms {
    }
 
    // Helper function for quickSort
+   // Swaps array[firstIndex] and array[secondIndex]
    private static <E> void arraySwap(E[] array, int firstIndex, int secondIndex) {
       E temp = array[firstIndex];
       array[firstIndex] = array[secondIndex];
