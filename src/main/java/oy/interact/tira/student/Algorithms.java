@@ -132,10 +132,10 @@ public class Algorithms {
    }
 
    // Helper function for quickSort
-   private static <E> void swap(E first, E second) {
-      E temp = first;
-      first = second;
-      second = temp;
+   private static <E> void arraySwap(E[] array, int firstIndex, int secondIndex) {
+      E temp = array[firstIndex];
+      array[firstIndex] = array[secondIndex];
+      array[secondIndex] = temp;
    }
 
    ////////////////////////////////
@@ -144,13 +144,13 @@ public class Algorithms {
    private static <E extends Comparable<E>> int partition(E[] array, int low, int high) {
       E pivot = array[high];
       int i = low - 1;
-      for (int j = low; j < high - 1; j++) {
+      for (int j = low; j < high; j++) {
          if (array[j].compareTo(pivot) <= 0) {
             i++;
-            swap(array[i], array[j]);
+            arraySwap(array, i, j);
          }
       }
-      swap(array[i + 1], array[high]);
+      arraySwap(array, i + 1, high);
       return i + 1;
    }
 
@@ -168,13 +168,13 @@ public class Algorithms {
    private static <E> int partition(E[] array, int low, int high, Comparator<E> comparator) {
       E pivot = array[high];
       int i = low - 1;
-      for (int j = low; j < high - 1; j++) {
+      for (int j = low; j < high; j++) {
          if (comparator.compare(array[j], pivot) <= 0) {
             i++;
-            swap(array[i], array[j]);
+            arraySwap(array, i, j);
          }
       }
-      swap(array[i + 1], array[high]);
+      arraySwap(array, i + 1, high);
       return i + 1;
    }
 
