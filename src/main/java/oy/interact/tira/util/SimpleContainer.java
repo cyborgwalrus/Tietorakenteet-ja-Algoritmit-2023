@@ -213,7 +213,7 @@ public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E
 	public void sort() {
 		if (this.isSorted())
 			return;
-		Algorithms.insertionSort(this.array, 0, count);
+		Algorithms.fastSort(this.array);
 		this.sorted = true;
 	}
 
@@ -222,7 +222,7 @@ public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E
 		if (this.isSorted() &&
 				usingComparator == getCurrenComparator())
 			return;
-		Algorithms.insertionSort(this.array, 0, count, usingComparator);
+		Algorithms.fastSort(array,0,count, usingComparator);
 		setCurrentComparator(usingComparator);
 		this.sorted = true;
 	}
