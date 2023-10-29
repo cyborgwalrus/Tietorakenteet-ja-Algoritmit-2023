@@ -195,7 +195,7 @@ public class Algorithms {
    }
 
    public static <E> void fastSort(E[] array, int fromIndex, int toIndex, Comparator<E> comparator) {
-      quickSort(array, fromIndex, toIndex, comparator);
+      quickSort(array, fromIndex, toIndex - 1, comparator);
    }
 
 }
