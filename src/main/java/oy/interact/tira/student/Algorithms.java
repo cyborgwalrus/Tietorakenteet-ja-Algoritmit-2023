@@ -144,7 +144,7 @@ public class Algorithms {
    private static <E extends Comparable<E>> int partition(E[] array, int low, int high) {
       E pivot = array[high];
       int i = low - 1;
-      for (int j = low; low < high; j++) {
+      for (int j = low; j < high - 1; j++) {
          if (array[j].compareTo(pivot) <= 0) {
             i++;
             swap(array[i], array[j]);
@@ -168,7 +168,7 @@ public class Algorithms {
    private static <E> int partition(E[] array, int low, int high, Comparator<E> comparator) {
       E pivot = array[high];
       int i = low - 1;
-      for (int j = low; low < high; j++) {
+      for (int j = low; j < high - 1; j++) {
          if (comparator.compare(array[j], pivot) <= 0) {
             i++;
             swap(array[i], array[j]);
