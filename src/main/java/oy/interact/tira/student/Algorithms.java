@@ -126,21 +126,76 @@ public class Algorithms {
             low = middle;
       }
 
-      if (comparator.compare(aValue, fromArray[low])==0)
+      if (comparator.compare(aValue, fromArray[low]) == 0)
          return low;
       return -1;
    }
 
+   // Helper function for quickSort
+   private static <E> void swap(E first, E second) {
+      E temp = first;
+      first = second;
+      second = temp;
+   }
+
+   ////////////////////////////////
+   // quickSort using Comparable
+   //////////////////////////////
+   private static <E extends Comparable<E>> int partition(E[] array, int low, int high) {
+      E pivot = array[high];
+      int i = low - 1;
+      for (int j = low; low < high; j++) {
+         if (array[j].compareTo(pivot) <= 0) {
+            i++;
+            swap(array[i], array[j]);
+         }
+      }
+      swap(array[i + 1], array[high]);
+      return i + 1;
+   }
+
+   private static <E extends Comparable<E>> void quickSort(E[] array, int low, int high) {
+      if (low < high) {
+         int partitionIndex = partition(array, low, high);
+         quickSort(array, low, partitionIndex - 1);
+         quickSort(array, partitionIndex + 1, high);
+      }
+   }
+
+   //////////////////////////////
+   // quickSort using Comparator
+   /////////////////////////////
+   private static <E> int partition(E[] array, int low, int high, Comparator<E> comparator) {
+      E pivot = array[high];
+      int i = low - 1;
+      for (int j = low; low < high; j++) {
+         if (comparator.compare(array[j], pivot) <= 0) {
+            i++;
+            swap(array[i], array[j]);
+         }
+      }
+      swap(array[i + 1], array[high]);
+      return i + 1;
+   }
+
+   private static <E> void quickSort(E[] array, int low, int high, Comparator<E> comparator) {
+      if (low < high) {
+         int partitionIndex = partition(array, low, high, comparator);
+         quickSort(array, low, partitionIndex - 1, comparator);
+         quickSort(array, partitionIndex + 1, high, comparator);
+      }
+   }
+
    public static <E extends Comparable<E>> void fastSort(E[] array) {
-      // TODO: Student, implement this.
+      quickSort(array, 0, array.length - 1);
    }
 
    public static <E> void fastSort(E[] array, Comparator<E> comparator) {
-      // TODO: Student, implement this.
+      quickSort(array, 0, array.length - 1, comparator);
    }
 
    public static <E> void fastSort(E[] array, int fromIndex, int toIndex, Comparator<E> comparator) {
-      // TODO: Student, implement this.
+      quickSort(array, fromIndex, toIndex, comparator);
    }
 
 }
