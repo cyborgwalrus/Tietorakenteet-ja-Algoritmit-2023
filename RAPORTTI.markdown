@@ -4,7 +4,7 @@ Kirjaa tähän tiedostoon **jokaiseen** tehtävään liittyvät omat raporttisi 
 
 Voit sisällyttää raporttiin tekstimuotoisia taulukoita (tasaukset välilyönnein):
 
-```
+```text
 n     Fill     Search   Total
 500   7        700      707
 1000  9        288      297
