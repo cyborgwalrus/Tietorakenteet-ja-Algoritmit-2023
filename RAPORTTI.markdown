@@ -184,7 +184,7 @@ Yksityiskohtaisten kommenttien ja luentodiojen pseudokoodin avulla tehtävän te
 
 Aikakompleksisuuden suhteen toteutukset ovat melkein tasaväkisiä. `ArrayQueue` jää hieman jälkeen kun se joutuu varaamaan lisää tilaa, pudottaen sen $O(1)$-luokasta luokkaan $O(n)$. `LinkedListi`n läpikäyminen on hitaampaa kuin `Array`n, mutta jonossa tätä meidän ei onneksi tarvitse tehdä, koska meitä kiinnostaa vain jonon ensimmäinen ja viimeinen elementti.
 
-Muistikompleksisuudessa `LinkedList` häviää `Array`lle koska sen pitää jokaisessa `Node`ssa säilyttämään muistissa viittauksen edelliseen ja seuraavaan `Node`en.
+Muistikompleksisuudessa `LinkedList` häviää `Array`lle koska sen pitää jokaisessa `Node`ssa säilyttääx muistissa viittauksen edelliseen ja seuraavaan `Node`en.
 
 Olettaisin myös että `ArrayQueue` saa pientä lisänopeutta paremmasta rekisterivälimuistien hyödyntämisestä koska sen data on muistissa peräkkäisissä muistiosoitteissa, mikä vähentää cache missejä.
 
