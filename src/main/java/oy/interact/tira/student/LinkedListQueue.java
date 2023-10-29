@@ -7,7 +7,6 @@ public class LinkedListQueue<E> implements QueueInterface<E> {
     private class Node<T> {
         T data;
         Node<T> next;
-        Node<T> previous;
 
         public Node(T data) {
             this.data = data;
@@ -47,7 +46,6 @@ public class LinkedListQueue<E> implements QueueInterface<E> {
             this.tail = this.head;
         }
         this.tail.next = new Node<E>(element);
-        this.tail.previous = this.tail;
         this.tail = this.tail.next;
         this.count++;
 
