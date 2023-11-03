@@ -124,6 +124,7 @@ public class LinkedListQueue<E> implements QueueInterface<E> {
         while (headPtr != null) {
             str.append(headPtr.data.toString());
             str.append(", ");
+            headPtr = headPtr.next;
         }
         str.delete(str.length() - 2, str.length());
         str.append("]");

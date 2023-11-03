@@ -34,11 +34,17 @@ public class ArrayQueue<E> implements QueueInterface<E> {
 
     private void reallocate(int newSize) {
         Object[] newArray = new Object[newSize];
-        for (int i = 0; i < this.capacity; i++) {
-            newArray[i] = this.array[i];
+        int newHead = 0;
+        int oldCount = this.count;
+        while(this.count > 0){
+            newArray[newHead] = this.dequeue();
+            newHead++;
         }
         this.capacity = newSize;
         this.array = newArray;
+        this.head = 0;
+        this.tail = oldCount;
+        this.count = oldCount;
     }
 
     /**
@@ -147,6 +153,7 @@ public class ArrayQueue<E> implements QueueInterface<E> {
             }
             str.append(this.array[headPtr].toString());
             str.append(", ");
+            headPtr++;
         }
         str.delete(str.length()-2, str.length());
         str.append("]");
