@@ -192,6 +192,11 @@ Olettaisin myös että `ArrayQueue` saa pientä lisänopeutta paremmasta rekiste
 
 `ArrayQueue`n toteutus sujui ongelmitta. Oli mielenkiintoista päästä käyttämään `LinkedList`iä oikeassa koodissa, tähän mennessä se on tullut vastaan vain pienessä C-kielen harjoitustehtävässä. Huomasin vasta TIRA coders sovelluksessa pienen bugin joka oli päässyt läpi yksikkötesteistä. Kun jonoa käytiin läpi, ei jäljellä olevien koodarien lukumäärä pienentynyt. Ohjelma ei kuitenkaan kaatunut kun päästiin jonon loppuun. Olin unohtanut pienentää `count`-muuttujaa kun `LinkedList`-jonosta poistettiin alkioita.
 
+#### 3.11.2023 korjaus
+Koodissa olikin bugeja. Molemmissa `toString()`-metodeissa oli loputon silmukka, minkä vuoksi suurin osa niitä hyödyntävistä testeistä epäonnistuivat hiljaa ilman että VSCode tajusi merkitä niitä hylätyiksi, joten puujärjestyksessä olevat testit näyttivät läpäistyiltä, vaikka vain ensimmäinen testi oli läpi. Onglema korjaantui lisäämällä silmukoihin puuttuvat silmukkamuuttujien suurennokset. Korjauksen jälkeen paljastui että puolet testeistä eivät mennetkään läpi.  
+
+`ArrayQueue.reallocate()` oli epähuomiossa tehty vain kopioimalla vanha array isompaan, kirjoitin sen uudestaan käyttäen `dequeue()`-metodia.
+
 ## 06-TASK
 
 ## 07-TASK
