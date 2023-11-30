@@ -184,7 +184,7 @@ Yksityiskohtaisten kommenttien ja luentodiojen pseudokoodin avulla tehtävän te
 
 Aikakompleksisuuden suhteen toteutukset ovat melkein tasaväkisiä. `ArrayQueue` jää hieman jälkeen kun se joutuu varaamaan lisää tilaa, pudottaen sen $O(1)$-luokasta luokkaan $O(n)$. `LinkedListi`n läpikäyminen on hitaampaa kuin `Array`n, mutta jonossa tätä meidän ei onneksi tarvitse tehdä, koska meitä kiinnostaa vain jonon ensimmäinen ja viimeinen elementti.
 
-Muistikompleksisuudessa `LinkedList` häviää `Array`lle koska sen pitää jokaisessa `Node`ssa säilyttääx muistissa viittauksen edelliseen ja seuraavaan `Node`en.
+Muistikompleksisuudessa `LinkedList` häviää `Array`lle koska sen pitää jokaisessa `Node`ssa säilyttää muistissa viittauksen edelliseen ja seuraavaan `Node`en.
 
 Olettaisin myös että `ArrayQueue` saa pientä lisänopeutta paremmasta rekisterivälimuistien hyödyntämisestä koska sen data on muistissa peräkkäisissä muistiosoitteissa, mikä vähentää cache missejä.
 
@@ -193,13 +193,17 @@ Olettaisin myös että `ArrayQueue` saa pientä lisänopeutta paremmasta rekiste
 `ArrayQueue`n toteutus sujui ongelmitta. Oli mielenkiintoista päästä käyttämään `LinkedList`iä oikeassa koodissa, tähän mennessä se on tullut vastaan vain pienessä C-kielen harjoitustehtävässä. Huomasin vasta TIRA coders sovelluksessa pienen bugin joka oli päässyt läpi yksikkötesteistä. Kun jonoa käytiin läpi, ei jäljellä olevien koodarien lukumäärä pienentynyt. Ohjelma ei kuitenkaan kaatunut kun päästiin jonon loppuun. Olin unohtanut pienentää `count`-muuttujaa kun `LinkedList`-jonosta poistettiin alkioita.
 
 #### 3.11.2023 korjaus
-Koodissa olikin bugeja. Molemmissa `toString()`-metodeissa oli loputon silmukka, minkä vuoksi suurin osa niitä hyödyntävistä testeistä epäonnistuivat hiljaa ilman että VSCode tajusi merkitä niitä hylätyiksi, joten puujärjestyksessä olevat testit näyttivät läpäistyiltä, vaikka vain ensimmäinen testi oli läpi. Onglema korjaantui lisäämällä silmukoihin puuttuvat silmukkamuuttujien suurennokset. Korjauksen jälkeen paljastui että puolet testeistä eivät mennetkään läpi.  
+
+Koodissa olikin bugeja. Molemmissa `toString()`-metodeissa oli loputon silmukka, minkä vuoksi suurin osa niitä hyödyntävistä testeistä epäonnistuivat hiljaa ilman että VSCode tajusi merkitä niitä hylätyiksi, joten puujärjestyksessä olevat testit näyttivät läpäistyiltä, vaikka vain ensimmäinen testi oli läpi. Ongelma korjaantui lisäämällä silmukoihin puuttuvat silmukkamuuttujien suurennokset. Korjauksen jälkeen paljastui että puolet testeistä eivät mennetkään läpi.  
 
 `ArrayQueue.reallocate()` oli epähuomiossa tehty vain kopioimalla vanha array isompaan, kirjoitin sen uudestaan käyttäen `dequeue()`-metodia.
 
 ## 06-TASK
 
 ## 07-TASK
+
+Muista toteuttaa TreeNode.
+Intin palautus ei toimi rekursiossa, käytä atomicInteger tai array
 
 ## 08-TASK
 
