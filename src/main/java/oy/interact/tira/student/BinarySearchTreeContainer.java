@@ -93,16 +93,16 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
 
     // Find -------------------------------------------------------------------
 
-    public V findRecursively(Predicate<V> searcher, TreeNode<K, V> currentNode) {
+    V findInOrder(Predicate<V> searcher, TreeNode<K, V> currentNode) {
         if (currentNode == null)
             return null;
         if (searcher.test(currentNode.value))
             return currentNode.value;
 
-        V leftValue = findRecursively(searcher, currentNode.left);
+        V leftValue = findInOrder(searcher, currentNode.left);
         if (leftValue != null)
             return leftValue;
-        V rightValue = findRecursively(searcher, currentNode.right);
+        V rightValue = findInOrder(searcher, currentNode.right);
         if (rightValue != null)
             return rightValue;
 
@@ -111,7 +111,7 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
 
     @Override
     public V find(Predicate<V> searcher) {
-        return findRecursively(searcher, root);
+        return findInOrder(searcher, root);
     }
     // ------------------------------------------------------------------------
 
@@ -204,11 +204,27 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
     }
     // -------------------------------------------------------------------------
 
+    // findIndex --------------------------------------------------------------
+
+    int findIndexInOrder(Predicate<V> searcher, TreeNode<K, V> currentNode, int index) {
+        if (currentNode == null)
+            return -1;
+        
+        findInOrder(searcher, currentNode.left);
+        if (searcher.test(currentNode.value))
+            return index;
+        findInOrder(searcher, currentNode.right);
+
+        return -1;
+    }
     @Override
     public int findIndex(Predicate<V> searcher) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findIndex'");
+        if(root == null)
+            return -1;
+        
+        return findIndexInOrder(searcher, root, 1);
     }
+    // -------------------------------------------------------------------------
 
     @Override
     public void accept(Visitor<K, V> visitor) throws Exception {
