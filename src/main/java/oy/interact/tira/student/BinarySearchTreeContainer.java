@@ -6,6 +6,7 @@ import oy.interact.tira.util.Visitor;
 
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 class TreeNode<K, V> {
@@ -17,7 +18,9 @@ class TreeNode<K, V> {
     TreeNode<K, V> right;
     TreeNode<K, V> parent;
 
-    public TreeNode() {
+    public TreeNode(K key, V value) {
+        this.key = key;
+        this.value = value;
         this.numberOfChildren = 0;
     }
 }
@@ -25,10 +28,9 @@ class TreeNode<K, V> {
 public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TIRAKeyedOrderedContainer<K, V> {
 
     TreeNode<K, V> root;
-    // int size; not needed, use root.numberOfChildren instead
 
     private Comparator<K> comparator;
-    private final int lowestIndex = 1;
+    final int LOWEST_INDEX = 0;
 
     public BinarySearchTreeContainer(Comparator<K> comparator) {
         this.comparator = comparator;
@@ -36,29 +38,58 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
 
     @Override
     public void add(K key, V value) throws OutOfMemoryError, IllegalArgumentException {
-        TreeNode<K, V> node = new TreeNode<K, V>();
+        if (key == null || value == null)
+            throw new IllegalArgumentException();
+
+        TreeNode<K, V> node = new TreeNode<K, V>(key, value);
         TreeNode<K, V> treeNodePtr = root;
+        TreeNode<K, V> parent = root;
 
         // Find the in-order place for the new node
         while (treeNodePtr != null) {
-            node.parent = treeNodePtr;
+            parent = treeNodePtr;
 
-            if (comparator.compare(node.key, treeNodePtr.key) < 0) {
-                treeNodePtr.numberOfChildren++;
+            // If the value of the current node is the same as the new node, replace it with
+            // the new node values
+            if (treeNodePtr.value.equals(node.value)) {
+                treeNodePtr.key = node.key;
+                treeNodePtr.value = node.value;
+                return;
+            }
+
+            int comparatorValue = comparator.compare(node.key, treeNodePtr.key);
+            if (comparatorValue < 0) {
                 treeNodePtr = treeNodePtr.left;
-            } else if (comparator.compare(node.key, treeNodePtr.key) > 0) {
-                treeNodePtr.numberOfChildren++;
+            } else if (comparatorValue > 0) {
                 treeNodePtr = treeNodePtr.right;
-            } else
-                break;
+            } else {
+                // Node is already in the tree
+                parent = null;
+                return;
+            }
+
         }
 
         if (root == null) {
             root = node;
-        } else if (comparator.compare(node.key, node.parent.key) < 0) {
+            return;
+        }
+        if (parent == null)
+            return;
+
+        node.parent = parent;
+        if (comparator.compare(node.key, node.parent.key) < 0) {
             node.parent.left = node;
-        } else {
+        } else if (comparator.compare(node.key, node.parent.key) > 0) {
             node.parent.right = node;
+        } else
+            return;
+
+        // Update numberOfchildren
+        treeNodePtr = node;
+        while (treeNodePtr != root) {
+            treeNodePtr = treeNodePtr.parent;
+            treeNodePtr.numberOfChildren++;
         }
 
     }
@@ -73,7 +104,7 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
 
         TreeNode<K, V> treeNodePtr = root;
         while (treeNodePtr != null) {
-            if (treeNodePtr.key == key)
+            if (comparator.compare(treeNodePtr.key, key) == 0)
                 return treeNodePtr.value;
 
             if (comparator.compare(key, treeNodePtr.key) < 0)
@@ -118,7 +149,9 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
 
     @Override
     public int size() {
-        return root.numberOfChildren;
+        if(root != null)
+            return root.numberOfChildren + 1;
+        else return 0;
     }
 
     @Override
@@ -137,13 +170,25 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
     }
 
     // toArray ------------------------------------------------------------------
+    class RecursiveArrayInOrderFiller {
+        private int currentIndex = 0;
+        private Pair<K, V>[] array;
 
-    void fillArrayInOrder(Pair<K, V>[] array, TreeNode<K, V> currentNode, int index) {
-        if (currentNode != null) {
-            fillArrayInOrder(array, currentNode.left, index);
-            array[index] = new Pair<K, V>(currentNode.key, currentNode.value);
-            index++;
-            fillArrayInOrder(array, currentNode.right, index);
+        public RecursiveArrayInOrderFiller(int arraySize) {
+            this.array = (Pair<K, V>[]) new Pair[arraySize];
+        }
+
+        void fillArrayInOrder(TreeNode<K, V> currentNode) {
+            if (currentNode != null) {
+                fillArrayInOrder(currentNode.left);
+                array[currentIndex] = new Pair<K, V>(currentNode.key, currentNode.value);
+                currentIndex++;
+                fillArrayInOrder(currentNode.right);
+            }
+        }
+
+        Pair<K, V>[] getArray() {
+            return this.array;
         }
     }
 
@@ -151,23 +196,40 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
     public Pair<K, V>[] toArray() throws Exception {
         if (root == null)
             return null;
-        Pair<K, V>[] array = null;
-        fillArrayInOrder(array, root, lowestIndex);
-        return array;
+        RecursiveArrayInOrderFiller arrayFiller = new RecursiveArrayInOrderFiller(root.numberOfChildren + 1);
+        arrayFiller.fillArrayInOrder(root);
+        return arrayFiller.getArray();
     }
     // -------------------------------------------------------------------------------
 
     // indexOf -----------------------------------------------------------
 
-    int indexOfInOrder(K itemKey, TreeNode<K, V> currentNode, int index) {
-        if (currentNode != null) {
-            indexOfInOrder(itemKey, currentNode.left, index);
-            if (comparator.compare(currentNode.key, itemKey) == 0)
-                return index;
-            index++;
-            indexOfInOrder(itemKey, currentNode.right, index);
+    private class RecursiveIndexOfFinder {
+        private int index;
+        K itemKey;
+        AtomicInteger atomicIndex;
+
+        public RecursiveIndexOfFinder(K itemKey) {
+            this.itemKey = itemKey;
+            this.index = -1;
+            this.atomicIndex = new AtomicInteger(0);
         }
-        return -1;
+
+        void findIndexRecursive(TreeNode<K, V> currentNode){
+            if(currentNode != null && index == -1){
+            findIndexRecursive(currentNode.left);
+            if(comparator.compare(itemKey, currentNode.key) == 0){
+                this.index = atomicIndex.get();
+            }
+            atomicIndex.getAndIncrement();
+            findIndexRecursive(currentNode.right);
+            }
+        }
+
+        int getIndex() {
+            return this.index;
+        }
+
     }
 
     @Override
@@ -175,53 +237,96 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         if (root == null)
             return -1;
 
-        return indexOfInOrder(itemKey, root, lowestIndex);
+        RecursiveIndexOfFinder indexFinder = new RecursiveIndexOfFinder(itemKey);
+        indexFinder.findIndexRecursive(root);
+
+        return indexFinder.getIndex();
     }
     // --------------------------------------------------------------------------
 
     // getIndex ---------------------------------------------------------------
+    
+    private class RecursiveGetIndexFinder {
+        private boolean targetFound;
+        private int targetIndex;
+        private AtomicInteger atomicIndex;
+        private Pair<K, V> pair;
 
-    Pair<K, V> getIndexInOrder(int index, TreeNode<K, V> currentNode, int currentIndex) {
-        if (currentNode != null) {
-            getIndexInOrder(index, currentNode.left, currentIndex);
-            if (index == currentIndex)
-                return new Pair<K, V>(currentNode.key, currentNode.value);
-            index++;
-            getIndexInOrder(index, currentNode.right, currentIndex);
+        public RecursiveGetIndexFinder(int index) {
+            this.targetIndex = index;
+            this.targetFound = false;
+            this.atomicIndex = new AtomicInteger(0);
         }
-        return null;
-    }
 
+        void findIndexRecursive(TreeNode<K, V> currentNode){
+            if(currentNode != null && targetFound == false){
+            findIndexRecursive(currentNode.left);
+            if(atomicIndex.get() == targetIndex){
+                targetFound = true;
+                pair = new Pair<K, V>(currentNode.key, currentNode.value);
+            }
+            atomicIndex.getAndIncrement();
+            findIndexRecursive(currentNode.right);
+            }
+        }
+
+        Pair<K, V> getPair() {
+            return this.pair;
+        }
+
+    }
+    
     @Override
     public Pair<K, V> getIndex(int index) throws IndexOutOfBoundsException {
         if (root == null)
             return null;
-        if (index < 0 || index > root.numberOfChildren)
+        if (index < 0 || index > root.numberOfChildren + 1)
             throw new IndexOutOfBoundsException();
 
-        return getIndexInOrder(index, root, lowestIndex);
+        RecursiveGetIndexFinder indexFinder = new RecursiveGetIndexFinder(index);
+        indexFinder.findIndexRecursive(root);
+        return indexFinder.getPair();
     }
     // -------------------------------------------------------------------------
 
     // findIndex --------------------------------------------------------------
 
-    int findIndexInOrder(Predicate<V> searcher, TreeNode<K, V> currentNode, int index) {
-        if (currentNode == null)
-            return -1;
-        
-        findInOrder(searcher, currentNode.left);
-        if (searcher.test(currentNode.value))
-            return index;
-        findInOrder(searcher, currentNode.right);
+    private class RecursiveIndexFinder {
+        private int index;
+        Predicate<V> searcher;
+        AtomicInteger atomicIndex;
 
-        return -1;
+        public RecursiveIndexFinder(Predicate<V> searcher) {
+            this.searcher = searcher;
+            this.index = -1;
+            atomicIndex = new AtomicInteger(0);
+        }
+
+        void findIndexRecursive(TreeNode<K, V> currentNode){
+        if(currentNode != null && index == -1){
+            findIndexRecursive(currentNode.left);
+            if(searcher.test(currentNode.value)){
+                this.index = atomicIndex.get();
+            }
+            atomicIndex.getAndIncrement();
+            findIndexRecursive(currentNode.right);
+
+        }
     }
+
+        int getIndex() {
+            return this.index;
+        }
+
+    }
+
     @Override
     public int findIndex(Predicate<V> searcher) {
-        if(root == null)
+        if (root == null)
             return -1;
-        
-        return findIndexInOrder(searcher, root, lowestIndex);
+        RecursiveIndexFinder indexFinder = new RecursiveIndexFinder(searcher);
+        indexFinder.findIndexRecursive(root);
+        return indexFinder.getIndex();
     }
     // -------------------------------------------------------------------------
 
