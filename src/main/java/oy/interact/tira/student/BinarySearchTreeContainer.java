@@ -132,12 +132,12 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         root = null;
     }
 
-    // TODO: fix
-    void fillArrayInOrder(Pair<K, V>[] array, TreeNode<K, V> currentNode) {
+    void fillArrayInOrder(Pair<K, V>[] array, TreeNode<K, V> currentNode, int index) {
         if (currentNode != null) {
-            fillArrayInOrder(array, currentNode.left);
-            array[currentNode.index - 1] = new Pair<K, V>(currentNode.key, currentNode.value);
-            fillArrayInOrder(array, currentNode.right);
+            fillArrayInOrder(array, currentNode.left, index);
+            array[index] = new Pair<K, V>(currentNode.key, currentNode.value);
+            index++;
+            fillArrayInOrder(array, currentNode.right, index);
         }
     }
 
@@ -146,7 +146,8 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         if (root == null)
             return null;
         Pair<K, V>[] array = null;
-        fillArrayInOrder(array, root);
+        int index = 1;
+        fillArrayInOrder(array, root, index);
         return array;
     }
 
