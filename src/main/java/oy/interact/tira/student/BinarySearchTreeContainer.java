@@ -28,6 +28,7 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
     // int size; not needed, use root.numberOfChildren instead
 
     private Comparator<K> comparator;
+    private final int lowestIndex = 1;
 
     public BinarySearchTreeContainer(Comparator<K> comparator) {
         this.comparator = comparator;
@@ -151,8 +152,7 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         if (root == null)
             return null;
         Pair<K, V>[] array = null;
-        int index = 1;
-        fillArrayInOrder(array, root, index);
+        fillArrayInOrder(array, root, lowestIndex);
         return array;
     }
     // -------------------------------------------------------------------------------
@@ -175,8 +175,7 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         if (root == null)
             return -1;
 
-        int index = 1;
-        return indexOfInOrder(itemKey, root, index);
+        return indexOfInOrder(itemKey, root, lowestIndex);
     }
     // --------------------------------------------------------------------------
 
@@ -200,7 +199,7 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         if (index < 0 || index > root.numberOfChildren)
             throw new IndexOutOfBoundsException();
 
-        return getIndexInOrder(index, root, 1);
+        return getIndexInOrder(index, root, lowestIndex);
     }
     // -------------------------------------------------------------------------
 
@@ -222,7 +221,7 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         if(root == null)
             return -1;
         
-        return findIndexInOrder(searcher, root, 1);
+        return findIndexInOrder(searcher, root, lowestIndex);
     }
     // -------------------------------------------------------------------------
 
