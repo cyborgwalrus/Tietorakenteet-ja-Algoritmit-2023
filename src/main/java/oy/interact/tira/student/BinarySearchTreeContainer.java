@@ -11,7 +11,6 @@ import java.util.function.Predicate;
 class TreeNode<K, V> {
     K key;
     V value;
-    int index;
     int numberOfChildren;
 
     TreeNode<K, V> left;
@@ -26,7 +25,7 @@ class TreeNode<K, V> {
 public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TIRAKeyedOrderedContainer<K, V> {
 
     TreeNode<K, V> root;
-    int size;
+    // int size; not needed, use root.numberOfChildren instead
 
     private Comparator<K> comparator;
 
@@ -39,28 +38,35 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         TreeNode<K, V> node = new TreeNode<K, V>();
         TreeNode<K, V> treeNodePtr = root;
 
+        // Find the in-order place for the new node
         while (treeNodePtr != null) {
             node.parent = treeNodePtr;
 
-            if (comparator.compare(node.key, treeNodePtr.key) < 0)
+            if (comparator.compare(node.key, treeNodePtr.key) < 0) {
+                treeNodePtr.numberOfChildren++;
                 treeNodePtr = treeNodePtr.left;
-            else if (comparator.compare(node.key, treeNodePtr.key) > 0)
+            } else if (comparator.compare(node.key, treeNodePtr.key) > 0) {
+                treeNodePtr.numberOfChildren++;
                 treeNodePtr = treeNodePtr.right;
-            else
+            } else
                 break;
         }
 
-        if (root == null)
+        if (root == null) {
             root = node;
-        else if (comparator.compare(node.key, node.parent.key) < 0)
+        } else if (comparator.compare(node.key, node.parent.key) < 0) {
             node.parent.left = node;
-        else
+        } else {
             node.parent.right = node;
+        }
+
     }
 
-    // TODO: tee loppuun
     @Override
     public V get(K key) throws IllegalArgumentException {
+        if (key == null)
+            throw new IllegalArgumentException();
+
         if (root == null)
             return null;
 
@@ -73,8 +79,10 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
                 treeNodePtr = treeNodePtr.left;
             else if (comparator.compare(key, treeNodePtr.key) > 0)
                 treeNodePtr = treeNodePtr.right;
-            else break;
+            else
+                break;
         }
+        return null;
     }
 
     @Override
@@ -83,40 +91,63 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         throw new UnsupportedOperationException("Unimplemented method 'remove'");
     }
 
+    public V findRecursively(Predicate<V> searcher, TreeNode<K, V> currentNode) {
+        if (currentNode == null)
+            return null;
+        if (searcher.test(currentNode.value))
+            return currentNode.value;
+
+        V leftValue = findRecursively(searcher, currentNode.left);
+        if (leftValue != null)
+            return leftValue;
+        V rightValue = findRecursively(searcher, currentNode.right);
+        if (rightValue != null)
+            return rightValue;
+
+        return null;
+    }
+
     @Override
     public V find(Predicate<V> searcher) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'find'");
+        return findRecursively(searcher, root);
     }
 
     @Override
     public int size() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'size'");
+        return root.numberOfChildren;
     }
 
     @Override
     public int capacity() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'capacity'");
+        return size();
     }
 
     @Override
     public void ensureCapacity(int capacity) throws OutOfMemoryError, IllegalArgumentException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'ensureCapacity'");
+        // Not needed for Binary Search Trees
     }
 
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clear'");
+        root = null;
+    }
+
+    // TODO: fix
+    void fillArrayInOrder(Pair<K, V>[] array, TreeNode<K, V> currentNode) {
+        if (currentNode != null) {
+            fillArrayInOrder(array, currentNode.left);
+            array[currentNode.index - 1] = new Pair<K, V>(currentNode.key, currentNode.value);
+            fillArrayInOrder(array, currentNode.right);
+        }
     }
 
     @Override
     public Pair<K, V>[] toArray() throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toArray'");
+        if (root == null)
+            return null;
+        Pair<K, V>[] array = null;
+        fillArrayInOrder(array, root);
+        return array;
     }
 
     @Override
