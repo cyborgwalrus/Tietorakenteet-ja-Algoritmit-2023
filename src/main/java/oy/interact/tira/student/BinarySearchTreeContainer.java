@@ -91,6 +91,8 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         throw new UnsupportedOperationException("Unimplemented method 'remove'");
     }
 
+    // Find -------------------------------------------------------------------
+
     public V findRecursively(Predicate<V> searcher, TreeNode<K, V> currentNode) {
         if (currentNode == null)
             return null;
@@ -111,6 +113,7 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
     public V find(Predicate<V> searcher) {
         return findRecursively(searcher, root);
     }
+    // ------------------------------------------------------------------------
 
     @Override
     public int size() {
@@ -132,6 +135,8 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         root = null;
     }
 
+    // toArray ------------------------------------------------------------------
+
     void fillArrayInOrder(Pair<K, V>[] array, TreeNode<K, V> currentNode, int index) {
         if (currentNode != null) {
             fillArrayInOrder(array, currentNode.left, index);
@@ -150,11 +155,14 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         fillArrayInOrder(array, root, index);
         return array;
     }
+    // -------------------------------------------------------------------------------
 
-    int indexOfInOrder(K itemKey, TreeNode<K, V> currentNode, int index){
+    // indexOf -----------------------------------------------------------
+
+    int indexOfInOrder(K itemKey, TreeNode<K, V> currentNode, int index) {
         if (currentNode != null) {
             indexOfInOrder(itemKey, currentNode.left, index);
-            if(comparator.compare(currentNode.key, itemKey) == 0)
+            if (comparator.compare(currentNode.key, itemKey) == 0)
                 return index;
             index++;
             indexOfInOrder(itemKey, currentNode.right, index);
@@ -164,12 +172,13 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
 
     @Override
     public int indexOf(K itemKey) {
-        if(root == null)
+        if (root == null)
             return -1;
-        
+
         int index = 1;
         return indexOfInOrder(itemKey, root, index);
     }
+    // --------------------------------------------------------------------------
 
     @Override
     public Pair<K, V> getIndex(int index) throws IndexOutOfBoundsException {
