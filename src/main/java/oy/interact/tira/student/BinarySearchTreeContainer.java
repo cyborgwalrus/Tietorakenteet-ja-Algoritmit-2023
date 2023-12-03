@@ -151,10 +151,24 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         return array;
     }
 
+    int indexOfInOrder(K itemKey, TreeNode<K, V> currentNode, int index){
+        if (currentNode != null) {
+            indexOfInOrder(itemKey, currentNode.left, index);
+            if(comparator.compare(currentNode.key, itemKey) == 0)
+                return index;
+            index++;
+            indexOfInOrder(itemKey, currentNode.right, index);
+        }
+        return -1;
+    }
+
     @Override
     public int indexOf(K itemKey) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'indexOf'");
+        if(root == null)
+            return -1;
+        
+        int index = 1;
+        return indexOfInOrder(itemKey, root, index);
     }
 
     @Override
