@@ -180,11 +180,29 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
     }
     // --------------------------------------------------------------------------
 
+    // getIndex ---------------------------------------------------------------
+
+    Pair<K, V> getIndexInOrder(int index, TreeNode<K, V> currentNode, int currentIndex) {
+        if (currentNode != null) {
+            getIndexInOrder(index, currentNode.left, currentIndex);
+            if (index == currentIndex)
+                return new Pair<K, V>(currentNode.key, currentNode.value);
+            index++;
+            getIndexInOrder(index, currentNode.right, currentIndex);
+        }
+        return null;
+    }
+
     @Override
     public Pair<K, V> getIndex(int index) throws IndexOutOfBoundsException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getIndex'");
+        if (root == null)
+            return null;
+        if (index < 0 || index > root.numberOfChildren)
+            throw new IndexOutOfBoundsException();
+
+        return getIndexInOrder(index, root, 1);
     }
+    // -------------------------------------------------------------------------
 
     @Override
     public int findIndex(Predicate<V> searcher) {
