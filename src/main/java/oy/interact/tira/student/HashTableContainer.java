@@ -10,7 +10,8 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
     private Pair<K, V>[] array;
     private int arraySize;
     private int elementsInArray;
-    private final int DEFAULT_SIZE = 1024;
+    private final int DEFAULT_SIZE = 100;
+    private final double REALLOCATION_THRESHOLD = 0.75;
 
     public HashTableContainer() {
         this.array = (Pair<K, V>[]) new Pair[DEFAULT_SIZE];
@@ -25,13 +26,22 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
     }
 
     private int calculateIndex(K key, int i) {
-        return ((key.hashCode() + i) & 0x7fffffff) % arraySize;
+        i++;
+        return ((key.hashCode() + 29 * i + 11 * i * i) & 0x7fffffff) % arraySize;
     }
 
     @Override
     public void add(K key, V value) throws OutOfMemoryError, IllegalArgumentException {
         if (key == null || value == null)
             throw new IllegalArgumentException();
+        
+        if(key.equals("61496b6a-46c1-4918-9fc0-53db57633b6d"))
+            key = key;
+
+        // If the new add pushes the array size over the reallocation threshold,
+        // increase capacity
+        if (size() + 1 > capacity() * REALLOCATION_THRESHOLD)
+            ensureCapacity(2 * capacity());
 
         int i = 0;
         int index = calculateIndex(key, i);
@@ -55,16 +65,21 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
     public V get(K key) throws IllegalArgumentException {
         if (key == null)
             throw new IllegalArgumentException();
+        if(key.equals("61496b6a-46c1-4918-9fc0-53db57633b6d"))
+            key = key;
 
-        int i = 0;
-        int index = calculateIndex(key, i);
-        while (this.array[index] != null) {
+        int i, index;
+        for (i = 0; i < capacity() - 1; i++) {
+            index = calculateIndex(key, i);
+            if (this.array[index] != null)
+                if (this.array[index].getKey().compareTo(key) == 0)
+                    return this.array[index].getValue();
+        }
 
+        index = calculateIndex(key, i);
+        if (this.array[index] != null) {
             if (this.array[index].getKey().compareTo(key) == 0)
                 return this.array[index].getValue();
-
-            i++;
-            index = calculateIndex(key, i);
         }
         return null;
     }
@@ -97,9 +112,9 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
         // Predicate is based on value and not key, therefore the array must be searched
         // manually
         for (int i = 0; i < arraySize; i++) {
-            if(array[i] == null)
+            if (array[i] == null)
                 continue;
-            
+
             if (searcher.test(array[i].getValue()))
                 return array[i].getValue();
         }
@@ -124,11 +139,13 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
         Pair<K, V>[] oldArray = array;
         int oldArraySize = capacity();
         array = (Pair<K, V>[]) new Pair[capacity];
-
+        elementsInArray = 0;
+        arraySize = capacity;
         for (int i = 0; i < oldArraySize; i++) {
             if (oldArray[i] != null)
                 add(oldArray[i].getKey(), oldArray[i].getValue());
         }
+        arraySize = capacity;
         oldArray = null;
     }
 
