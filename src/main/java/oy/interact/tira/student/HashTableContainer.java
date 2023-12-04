@@ -10,6 +10,13 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
     private Pair<K, V>[] array;
     private int arraySize;
     private int elementsInArray;
+    private final int DEFAULT_SIZE = 1024;
+
+    public HashTableContainer() {
+        this.array = (Pair<K, V>[]) new Pair[DEFAULT_SIZE];
+        this.arraySize = DEFAULT_SIZE;
+        this.elementsInArray = 0;
+    }
 
     public HashTableContainer(int arraySize) {
         this.array = (Pair<K, V>[]) new Pair[arraySize];
