@@ -37,9 +37,11 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
         int index = calculateIndex(key, i);
         while (this.array[index] != null) {
             // If the same key is already in the array, replace it
-            if (this.array[index].getKey().compareTo(key) == 0)
+            if (this.array[index].getKey().compareTo(key) == 0) {
                 this.array[index] = new Pair<K, V>(key, value);
-                
+                return;
+            }
+
             i++;
             index = calculateIndex(key, i);
         }
@@ -92,9 +94,13 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
 
     @Override
     public V find(Predicate<V> searcher) {
-        // Predicate is based on value and not key, therefore the array must be searched manually
-        for(int i = 0; i < arraySize;i++){
-            if(searcher.test(array[i].getValue()))
+        // Predicate is based on value and not key, therefore the array must be searched
+        // manually
+        for (int i = 0; i < arraySize; i++) {
+            if(array[i] == null)
+                continue;
+            
+            if (searcher.test(array[i].getValue()))
                 return array[i].getValue();
         }
         return null;
@@ -112,15 +118,15 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
 
     @Override
     public void ensureCapacity(int capacity) throws OutOfMemoryError, IllegalArgumentException {
-        if(capacity <= 0 || capacity <= size())
+        if (capacity <= 0 || capacity <= size())
             throw new IllegalArgumentException();
-        
+
         Pair<K, V>[] oldArray = array;
         int oldArraySize = capacity();
         array = (Pair<K, V>[]) new Pair[capacity];
 
-        for(int i = 0; i < oldArraySize;i++){
-            if(oldArray[i] != null)
+        for (int i = 0; i < oldArraySize; i++) {
+            if (oldArray[i] != null)
                 add(oldArray[i].getKey(), oldArray[i].getValue());
         }
         oldArray = null;
@@ -134,7 +140,16 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
 
     @Override
     public Pair<K, V>[] toArray() throws Exception {
-        Pair<K, V>[] newArray = array;
+        Pair<K, V>[] newArray = (Pair<K, V>[]) new Pair[size()];
+
+        int newIndex = 0;
+        for (int oldIndex = 0; oldIndex < capacity(); oldIndex++) {
+            if (array[oldIndex] != null) {
+                newArray[newIndex] = array[oldIndex];
+                newIndex++;
+            }
+
+        }
         return newArray;
     }
 
