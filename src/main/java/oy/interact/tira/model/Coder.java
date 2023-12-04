@@ -21,10 +21,10 @@ public class Coder implements Comparable<Coder> {
 	private String coderName;
 	private String phoneNumber;
 
-	// For Fibonacci hashing, ~= 2^30 * (5/3),
+	// For Fibonacci hashing, ~= 2^30 * golden ratio,
 	// should be 2^32 but it wouldn't fit into int
 	// https://en.wikipedia.org/wiki/Hash_function#fibonacci_hashing
-	private final int FIBONACCHI_MULTIPLIER = 1789569707;
+	private final int FIBONACCHI_MULTIPLIER = 1737350767;
 
 	/**
 	 * Only to be used when reading objects from JSON or other
