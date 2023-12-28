@@ -182,7 +182,7 @@ Yksityiskohtaisten kommenttien ja luentodiojen pseudokoodin avulla tehtävän te
 
 ### LinkedListQueue vs ArrayQueue
 
-Aikakompleksisuuden suhteen toteutukset ovat melkein tasaväkisiä. `ArrayQueue` jää hieman jälkeen kun se joutuu varaamaan lisää tilaa, pudottaen sen $O(1)$-luokasta luokkaan $O(n)$. `LinkedListi`n läpikäyminen on hitaampaa kuin `Array`n, mutta jonossa tätä meidän ei onneksi tarvitse tehdä, koska meitä kiinnostaa vain jonon ensimmäinen ja viimeinen elementti.
+Aikakompleksisuuden suhteen toteutukset ovat melkein tasaväkisiä. `ArrayQueue` jää hieman jälkeen kun se joutuu varaamaan lisää tilaa, pudottaen sen $O(1)$-luokasta luokkaan $O(n)$. `LinkedList`in läpikäyminen on hitaampaa kuin `Array`n, mutta jonossa tätä meidän ei onneksi tarvitse tehdä, koska meitä kiinnostaa vain jonon ensimmäinen ja viimeinen elementti.
 
 Muistikompleksisuudessa `LinkedList` häviää `Array`lle koska sen pitää jokaisessa `Node`ssa säilyttää muistissa viittauksen edelliseen ja seuraavaan `Node`en.
 
@@ -199,6 +199,32 @@ Koodissa olikin bugeja. Molemmissa `toString()`-metodeissa oli loputon silmukka,
 `ArrayQueue.reallocate()` oli epähuomiossa tehty vain kopioimalla vanha array isompaan, kirjoitin sen uudestaan käyttäen `dequeue()`-metodia.
 
 ## 06-TASK
+
+### InsertionSort Mittaukset
+
+![InsertionSort graph](task-06-graph-InsertionSort.png)
+![InsertionSort table](task-06-table-InsertionSort.png)
+
+### QuickSort Mittaukset
+
+![QuickSort graph](task-06-graph-QuickSort.png)
+![QuickSort table](task-06-table-QuickSort.png)
+
+### Analyysi
+
+#### InsertionSort
+
+Mittausdatasta näkyy selvästi että InsertionSort ei ainakaan ole lineaarinen eli $O(n)$. Etenkin `ms/element` kentässä huomataan ajan tuplaantumista testien välillä, ja testistä 4 eteenpäin ajoaika hyppää niin massiivisesti että epäilen läppärini vaihtaneen RAMin täytyttyä pagefilen puolelle.  
+Kaavion trendiviivan tulkinta vaikeuttaa mittauspisteiden harvuus testialueen loppupuolella. Kuten kuvata näkee, suurin osa mittauspisteistä on ryppäänä käyrän alkupäässä joiden jälkeen on vain 2 mittauspistettä mikä luo illuusion käyrän lineaarisuudesta. Kun mittausaluetta rajaa alku- ja loppupäästä, käyrän eksponentiaalinen kasvu näkyy paljon selvemmin. Kuten Task 1 raportissa totesin, on `InsertionSort`in aikakompleksisuus luokkaa $O(n^2)$ koska se sisältää kaksi sisäkkäistä silmukkaa.
+
+#### QuickSort
+
+Jo pelkästään testien lukumäärästä huomataan että `QuickSort` skaalautuu `InsertionSort`ia paremmin. Siinä missä `InsertionSort` sakkaa kuudennen testin kohdalla, `QuickSort` pääsee ongelmitta kahdeksanteen testiin asti. Myös sen `ms/element` on monta kertaluokkaa pienempi ja kasvaa mitättömän vähän testien välillä.  
+Kaaviosta näkyy selvästi että mittaukset asettuvat lineaariselle trendiviivalle $R^2$-arvolla $0.999$. Tämä on ensisilmäyksellä ristiriidassa koodin (n-kokoisen for-loopin sisällä toinen joka kierroksella puolittuva silmukka) ja teorian kanssa, joiden mukaan `QuickSort`in aikakompleksisuus on $O(n*log(n))$, mutta kun huomioidaan että aikakompleksisuuden $n$-termi kasvaa $log(n)$-termiä nopeammin, on selvää että suurilla $n$-arvoilla $O(n*log(n))$ lähestyy asymptoottisesti luokkaa $O(n)$.
+
+### Muita Mietteitä
+
+Koitin ensin tehdä `QuickSort`ia iteratiivisella toteutuksella mutta en saanut sitä toimimaan, joten siirryin helpompaan rekursiiviseen toteutukseen. Toteutus sujui ongelmitta muutamaa lajittelujärjestyksen pilaavaa off-by-one-erroria lukuunottamatta.
 
 ## 07-TASK
 
