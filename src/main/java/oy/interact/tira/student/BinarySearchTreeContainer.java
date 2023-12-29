@@ -3,13 +3,14 @@ package oy.interact.tira.student;
 import oy.interact.tira.util.Pair;
 import oy.interact.tira.util.TIRAKeyedOrderedContainer;
 import oy.interact.tira.util.Visitor;
+import oy.interact.tira.util.Visitable;
 
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-class TreeNode<K, V> {
+class TreeNode<K extends Comparable<K>, V> implements Visitable<K,V> {
     K key;
     V value;
     int numberOfChildren;
@@ -22,6 +23,10 @@ class TreeNode<K, V> {
         this.key = key;
         this.value = value;
         this.numberOfChildren = 0;
+    }
+
+    public void accept(Visitor<K, V> visitor) throws Exception {
+       visitor.visit(this);
     }
 }
 
@@ -332,7 +337,7 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
 
     @Override
     public void accept(Visitor<K, V> visitor) throws Exception {
-       // not implemented
+       visitor.visit(this);
     }
 
 }
