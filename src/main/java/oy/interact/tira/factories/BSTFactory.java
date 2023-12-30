@@ -6,6 +6,7 @@ import java.util.Comparator;
 import oy.interact.tira.util.TIRAKeyedOrderedContainer;
 import oy.interact.tira.util.Visitor;
 import oy.interact.tira.NotYetImplementedException;
+import oy.interact.tira.student.BSTAnalyzerVisitor;
 import oy.interact.tira.student.BinarySearchTreeContainer;
 
 public class BSTFactory {
@@ -19,7 +20,7 @@ public class BSTFactory {
 
 	// You may create the functionality that analyses a BST using the Visitor pattern
 	public static <K extends Comparable<K>, V> Visitor<K,V> createBSTAnalyzerVisitor() {
-		throw new NotYetImplementedException("Task 07-TASK BST Analyzer visitor not yet implemented");
+		return new BSTAnalyzerVisitor<>();
 	}
 
 	public static <K extends Comparable<K>, V> Visitor<K,V> createBSTToDotFileTreeVisitor(String graphName, String fileName) throws IOException {
