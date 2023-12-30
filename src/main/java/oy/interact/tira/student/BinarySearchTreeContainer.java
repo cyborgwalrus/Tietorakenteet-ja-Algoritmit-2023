@@ -10,25 +10,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-class TreeNode<K extends Comparable<K>, V> implements Visitable<K,V> {
-    K key;
-    V value;
-    int numberOfChildren;
-
-    TreeNode<K, V> left;
-    TreeNode<K, V> right;
-    TreeNode<K, V> parent;
-
-    public TreeNode(K key, V value) {
-        this.key = key;
-        this.value = value;
-        this.numberOfChildren = 0;
-    }
-
-    public void accept(Visitor<K, V> visitor) throws Exception {
-       visitor.visit(this);
-    }
-}
 
 public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TIRAKeyedOrderedContainer<K, V> {
 

@@ -1,5 +1,8 @@
 package oy.interact.tira.util;
 
+import oy.interact.tira.student.BinarySearchTreeContainer;
+import oy.interact.tira.student.TreeNode;
+
 /**
  * An interface for all visitors that visit Visitables.
  * 
@@ -30,6 +33,8 @@ public interface Visitor<K extends Comparable<K>,V> {
 	 * @throws Exception
 	 */
 	void visit(Visitable<K,V> visitable) throws Exception;
+	void visit(BinarySearchTreeContainer<K,V> binarySearchTree) throws Exception;
+	void visit(TreeNode<K,V> node) throws Exception;
 
 	/**
 	 * For situations where the visitor needs to allocate resources
