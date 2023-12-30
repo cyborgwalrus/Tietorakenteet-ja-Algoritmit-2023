@@ -1,9 +1,6 @@
 package oy.interact.tira.student;
 
-import oy.interact.tira.util.Visitable;
-import oy.interact.tira.util.Visitor;
-
-public class BSTAnalyzerVisitor<K extends Comparable<K>, V> implements Visitor<K, V> {
+public class BSTAnalyzerVisitor<K extends Comparable<K>, V> implements TreeVisitor<K, V> {
     private int numberOfElements;
     private int numberOfLeafNodes;
     private int minimumDepth;
@@ -23,25 +20,18 @@ public class BSTAnalyzerVisitor<K extends Comparable<K>, V> implements Visitor<K
         this.idealDepth = 0;
     }
 
-    @Override
-    public void visit(Visitable<K, V> visitable) throws Exception {
-        if (visitable != null) {
-            visitable.accept(this);
-        }
-    }
-
-    public void visit(BinarySearchTreeContainer<K, V> binarySearchTree) throws Exception {
+    public void visitTree(BinarySearchTreeContainer<K, V> binarySearchTree) throws Exception {
         if (binarySearchTree != null && binarySearchTree.root != null) {
             numberOfElements = binarySearchTree.root.numberOfChildren + 1;
             binarySearchTree.root.accept(this);
             // BST visit complete, processing remaining variables
             averageDepth = sumOfDepths / numberOfElements;
-            idealDepth = (int)Math.log(numberOfElements);
+            idealDepth = (int) Math.log(numberOfElements);
         }
 
     }
 
-    public void visit(TreeNode<K, V> node) throws Exception {
+    public void visitNode(TreeNode<K, V> node) throws Exception {
         if (node != null) {
             currentDepth++;
             // Check for leaf nodes
@@ -59,12 +49,6 @@ public class BSTAnalyzerVisitor<K extends Comparable<K>, V> implements Visitor<K
             if (currentDepth > maximumDepth)
                 maximumDepth = currentDepth;
         }
-    }
-
-    @Override
-    public void close() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'close'");
     }
 
     @Override

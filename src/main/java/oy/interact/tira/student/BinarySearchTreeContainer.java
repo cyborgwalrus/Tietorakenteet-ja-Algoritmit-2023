@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-class TreeNode<K extends Comparable<K>, V> implements Visitable<K,V> {
+class TreeNode<K extends Comparable<K>, V> implements TreeVisitable<K,V> {
     K key;
     V value;
     int numberOfChildren;
@@ -25,12 +25,12 @@ class TreeNode<K extends Comparable<K>, V> implements Visitable<K,V> {
         this.numberOfChildren = 0;
     }
 
-    public void accept(Visitor<K, V> visitor) throws Exception {
-       visitor.visit(this);
+    public void accept(TreeVisitor<K, V> visitor) throws Exception {
+       visitor.visitNode(this);
     }
 }
 
-public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TIRAKeyedOrderedContainer<K, V> {
+public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TIRAKeyedOrderedContainer<K, V>, TreeVisitable<K, V> {
 
     TreeNode<K, V> root;
 
@@ -334,6 +334,11 @@ public class BinarySearchTreeContainer<K extends Comparable<K>, V> implements TI
         return indexFinder.getIndex();
     }
     // -------------------------------------------------------------------------
+
+    @Override
+    public void accept(TreeVisitor<K, V> visitor) throws Exception {
+       visitor.visitTree(this);
+    }
 
     @Override
     public void accept(Visitor<K, V> visitor) throws Exception {

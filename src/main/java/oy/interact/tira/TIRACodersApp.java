@@ -254,7 +254,6 @@ public class TIRACodersApp implements ActionListener {
                 PhoneBookBST bstModel = (PhoneBookBST) model;
                 TIRAKeyedOrderedContainer<String, Coder> bst = bstModel.getContainer();
                 if (null != bst) {
-                    // TODO: student: implement a BSTAnalyzerVisitor (optional).
                     long start = System.currentTimeMillis();
                     Visitor<String, Coder> visitor = BSTFactory.createBSTAnalyzerVisitor();
                     if (null != visitor) {

@@ -20,7 +20,7 @@ public class BSTFactory {
 
 	// You may create the functionality that analyses a BST using the Visitor pattern
 	public static <K extends Comparable<K>, V> Visitor<K,V> createBSTAnalyzerVisitor() {
-		return new BSTAnalyzerVisitor<>();
+		return new BSTAnalyzerVisitor<K, V>();
 	}
 
 	public static <K extends Comparable<K>, V> Visitor<K,V> createBSTToDotFileTreeVisitor(String graphName, String fileName) throws IOException {
