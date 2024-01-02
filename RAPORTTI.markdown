@@ -264,13 +264,22 @@ Minimisyvyys puolestaan kertoo alueesta joissa aakkosjärjestettyjä nimiä on n
 - **findIndex(Predicate<V> searcher)**: Käytännössä sama funktio kuin `indexOf` mutta comparatorin sijasta käytetään predikaattia. $O(n)$.
 - **accept(Visitor<K, V> visitor)**: $O(1)$.
 
-#### BST vs Simple Container
+#### BST vs Simple Container (Array)
+
+- **Add**: `BST.add()` on $O(log(n))$ algoritmina nopeampi suuremmillakin datamäärillä. Simple Container aloittaa $O(n)$-luokassa käyden sisäisen taulukkonsa läpi alusta loppuun kopioiden varalta ja lisää uuden alkion arrayn loppuun jos niitä ei löydy. Suuremmilla datamäärillä tarvitaan myös `reallocate()`-kutsua joka on $O(n)$, joten Simple Container on käytännössä puhdasta $O(n)$-algoritmia hitaampi.
+- **ToArray+Sort** BST edelleen nopeampi. Koska BST on luonnostaan lajiteltu, riittää että sen käydään läpi InOrder-järjestyksessä kopioiden sen alkiot samalla palautettavaan taulukkoon ajassa $O(n)$. Simple Container ei välttämättä ole järjestyksessä, joten se pitää ensin lajitella QuickSort-algoritmilla ajassa $O(n*log(n))$ ja sen jälkeen kopioida taulukosta toiseen alkio kerrallaan ajassa $O(n)$.
+- **Search** Tasapeli. Molemmat joutuvat käymään alkionsa läpi yksi kerrallaan ajassa $O(n)$ kunnes hakuehtoa vastaava alkio löytyy.
+- **getIndex** Simple Container voittaa suurella marginaalilla. Jos Simple Container on järjestetty, on indeksissä olevan alkion haku $O(1)$-operaatio, ja järjestyksenkin kanssa vain $O(n*log(n))$. Paremmalla toteutuksella BST olisi ollut $O(log(n))$ koska lapsisolmujen määrää hyödyntämällä indeksin haku saataisiin puolitettua joka askeleella. Oma toteutukseni indeksin hausta oli vain paljon hitaampi $O(n)$ koska se joutuu hakemaan järjestyksessä ensimmäisen alkion ja käymään ne yksitellen läpi kunnes haluttu indeksi löytyy.
 
 ### Valinnaiset tehtävät
 
 - Tein `BSTAnalyzerVisitor`
 
 ### Muista mietteitä
+
+- Binäärisen hakupuun järjestyksen hahmottamisen vaikeus tuotti ongelmia toteutuksien kanssa.
+- En aluksi muistanut AtomicIntegeriä joten rekursiivisien algoritmien toteutus aiheutti päänvaivaa.
+- `BSTAnalyzerVisitor` vaikutti ensin helpolta mutta en saanut `.visit()`-metodin overloadausta toimimaan, vaan kaikki luokat kutsuivat jostain syystä ainoastaan `visit(Visitable<K, V> visitable)`-versiota eivätkä omia metodejaan. Tuhlattuani useita tunteja kymmenien stackoverflow-postausten ymmärtämiseen, tajusin viimein mistä vika johtui. Tekemäni overloadatut metodit puuttuivat `Visitor`-interfacesta minkä vuoksi `Visitable`-interfacea toteuttavat luokat eivät tienneet muiden kuin geneerisen `.visit()` metodin olemassaolosta.
 
 ## 08-TASK
 
