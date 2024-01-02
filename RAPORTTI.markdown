@@ -238,16 +238,33 @@ Koitin ensin tehdä `QuickSort`ia iteratiivisella toteutuksella mutta en saanut 
 #### Binary Search Tree
 
 ![BST get(index)](<task-07-BST Get(index) Time per Item.png>)
-![tree analytics](<task-07-tree analytics.png>)
 ![compare bst](task-07-compare-bst.png)
 
 ### Analyysi
 
-puun syvyys
+#### Puun syvyys
 
-algoritmit
+![tree analytics](<task-07-tree analytics.png>)
 
-bst vs simple
+Visitorin avulla kerätyn datan perusteella hakupuu suoriutui varsin hyvin verrattuna ideaaliin, ottaen huomioon että ideaalin syvyyden laskukaava $log_{2}(n)$ olettaa että puuhun järjestettävät alkiot ovat jakautuneet tasaisesti, mikä ei tietenkään päde ihmisten nimille.  
+
+Tämä huomataan etenkin vertaamalla ideaalia syvyyttä minimi- ja maksimisyvyyksiin. Maksimisyvyys kertoo meille että nimien aakkosjärjestyksessä löytyy ainakin yksi klusteri jonka järjestäminen hakupuuhun johtaa yli tuplasti ideaalia syvempään oksaan.  
+Minimisyvyys puolestaan kertoo alueesta joissa aakkosjärjestettyjä nimiä on niin harvassa että niiden järjestämiseen vaadittavan oksan syvyys on puolet ideaalista.
+
+#### Algoritmit
+
+- **add(K key, V value)**: Silmukka jonka sisällä "pontteri" sukeltaa puuhun etsien oikeaa paikkaa lisättävälle alkiolle. Valitsee vasemman tai oikean lapsen comparatorilla hyödyntäen puun järjestystä. Hakualue puolittuu joka kierroksella. $O(log(n))$.
+- **get(K key)**: Sama toimintaperiaate kuin `add()`. $O(log(n))$.
+- **find(Predicate<V> searcher)**: Rekursiivinen funktio sukeltaa puuhun InOrder-järjestyksessä. Koska `searcher` osaa vain yhtäsuuruuden, on jokainen alkio testattava yksitellen, joten pahimmassa tapauksessa funktio käy jokaisen alkion läpi. $O(n)$
+- **size()**: Laskee puun solmujen lukumäärän hyödyntämällä juurisolmun lasten lukumäärää, joka päivittyy `add()`-funktiossa. $O(1)$.
+- **clear()**: Asettaa `root`-solmun `null`iksi. $O(1)$.
+- **toArray()**: Rekursiivinen funktio käy kaikki puun solmut läpi InOrder-järjestyksessä lisäten ne samalla taulukkoon. $O(n)$.
+- **indexOf(K itemKey)** Rekursiivinen funktio käy puun läpi InOrder-järjestyksessä kasvattaen samalla `AtonicInteger` indeksiä ja palauttaa sen jos `itemKey`tä vastaava alkio löytyy. $O(n)$.
+- **getIndex(int index)**: Sama toimintaperiaate kuin `indexOf()` mutta palauttaa solmun kun ehto `AtomicIdex == index` on saavutettu. $O(n)$.
+- **findIndex(Predicate<V> searcher)**: Käytännössä sama funktio kuin `indexOf` mutta comparatorin sijasta käytetään predikaattia. $O(n)$.
+- **accept(Visitor<K, V> visitor)**: $O(1)$.
+
+#### BST vs Simple Container
 
 ### Valinnaiset tehtävät
 
