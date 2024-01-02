@@ -228,8 +228,32 @@ Koitin ensin tehdä `QuickSort`ia iteratiivisella toteutuksella mutta en saanut 
 
 ## 07-TASK
 
-Muista toteuttaa TreeNode.
-Intin palautus ei toimi rekursiossa, käytä atomicInteger tai array
+### Mittaukset
+
+#### Simple Container
+
+![simple container add time](<task-07-Simple Container Add Time per Item.png>)
+![compare simple-container](task-07-compare-simple-container.png)
+
+#### Binary Search Tree
+
+![BST get(index)](<task-07-BST Get(index) Time per Item.png>)
+![tree analytics](<task-07-tree analytics.png>)
+![compare bst](task-07-compare-bst.png)
+
+### Analyysi
+
+puun syvyys
+
+algoritmit
+
+bst vs simple
+
+### Valinnaiset tehtävät
+
+- Tein `BSTAnalyzerVisitor`
+
+### Muista mietteitä
 
 ## 08-TASK
 
