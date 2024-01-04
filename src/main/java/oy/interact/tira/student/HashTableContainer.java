@@ -34,9 +34,6 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
     public void add(K key, V value) throws OutOfMemoryError, IllegalArgumentException {
         if (key == null || value == null)
             throw new IllegalArgumentException();
-        
-        if(key.equals("61496b6a-46c1-4918-9fc0-53db57633b6d"))
-            key = key;
 
         // If the new add pushes the array size over the reallocation threshold,
         // increase capacity
@@ -65,8 +62,6 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
     public V get(K key) throws IllegalArgumentException {
         if (key == null)
             throw new IllegalArgumentException();
-        if(key.equals("61496b6a-46c1-4918-9fc0-53db57633b6d"))
-            key = key;
 
         int i, index;
         for (i = 0; i < capacity() - 1; i++) {
@@ -76,11 +71,6 @@ public class HashTableContainer<K extends Comparable<K>, V> implements TIRAKeyed
                     return this.array[index].getValue();
         }
 
-        index = calculateIndex(key, i);
-        if (this.array[index] != null) {
-            if (this.array[index].getKey().compareTo(key) == 0)
-                return this.array[index].getValue();
-        }
         return null;
     }
 

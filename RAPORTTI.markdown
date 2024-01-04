@@ -283,4 +283,27 @@ Minimisyvyys puolestaan kertoo alueesta joissa aakkosjärjestettyjä nimiä on n
 
 ## 08-TASK
 
+### Algoritmit
+
+#### Coder
+
+- **HashCode()**: Käytin Fibonacchi hashingia jossa `Coder.getId()` kerrotaan valmiiksi lasketulla vakiolla joka laskettiin kaavalla $2^{30}/\phi$, missä $\phi$ on kultaisen leikkauksen likiarvo.
+
+#### HashTableContainer
+
+- **calculateIndex(K key, int i)**: Laskee lisättävälle alkiolle indeksin kaavalla  
+ `((key.hashCode() + 29*i + 11*i*i) & 0x7fffffff) % arraySize`:
+  1. `key.hashCode()` on `Coder`-oliolla *fibonacchi hash*
+  2. `+ 29*i + 11*i*i` *Fibonacchi hashing* yksinään johtaa indeksien kasaantumiseen, joten sitä muokataan *Quadratic Probing*illa, missä $29$ ja $11$ ovat mielivaltaisesti valittuja alkulukuja ja $i$ on yleensä arvoltaan $1$ mutta sitä voidaan suurentaa jos $i=1$ johtaa *hash collision*iin.
+  3. `& 0x7fffffff` Bitwise AND bittimaskilla `0x7fffffff` nolla luvun suurimman bitin mikä muuttaa negatiiviset luvut positiiviseksi, koska Javassa `int` on *two's complement*-formaatissa.
+  4. `% arraySize` kohdissa 1 ja 2 laskettu hash on välillä $[0, 2^{31}]$ joten se pienennetään modulolla välillä $[0, arraySize - 1]$.
+- **add(K key, V value)**: Jos uuden alkion lisäys saa taulukon koon ylittämään rajan `capacity() * REALLOCATION_THRESHOLD=0.75`, tuplataan taulukon koko metodilla `ensureCapacity()`. Sen jälkeen `while`-silmukassa etsitään `calculateIndex()`-metodin avulla lisättävälle alkiolle tyhjä paikka. Parhaimmillaan $O(1)$ mutta $O(n)$ jos joudutaan ajamaan `ensureCapacity()`.
+- **get(K key)**: Laskee `calculateIndex()`-metodilla `key`-argumenttia vastaavan indeksin ja vertaa sitä indeksissä olevaan alkioon. Jos `key`t täsmäävät, palauttaa indeksissä olevan alkion `value`n. Jos `key`t eivät täsmää, suurennetaan `calculateIndex()`-metodin argumenttia `i` ja yritetään uudestaan. $O(1)$.
+- **remove(K key)**: Sama toimintaperiaate kuin `get(K key)`, mutta palauttamisen lisäksi nullaa alkion. $O(1)$.
+- **find(Predicate<V> searcher)**: Koska hajautustaulun indeksi lasketaan `key`stä eikä `value`sta, on koko taulukko käytävä manuaalisesti läpi kunnes predikaattia vastaava `value` löytyy. $O(n)$.
+- **size()** ja **capacity()**: palauttavat valmiiksi lasketun attribuutin. $O(1)$.
+- **ensureCapacity(int capacity)**: Koska taulukon koon muuttaminen vaikuttaa `calculateIndex()`-metodissa laskettuihin indekseihin, alkiot eivät päädy erikokoisissa taulukoissa samoihin indekseihin. Siksi taulukon koota muuttaessa on jokainen taulukon alkio indeksoitava uudestaan. $O(n)$.
+- **clear()**: Korvaa taulukon samankokoisella tyhjällä taulukolla. $O(1)$.
+- **toArray()**: Käy hajautustaulukon läpi ja kopio jokaisen alkion yksi kerrallaan uuteen palautettavaan taulukkoon. $O(n)$.
+
 ## 09-TASK
