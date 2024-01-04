@@ -228,6 +228,19 @@ Koitin ensin tehdä `QuickSort`ia iteratiivisella toteutuksella mutta en saanut 
 
 ## 07-TASK
 
+### Algoritmit
+
+- **add(K key, V value)**: Silmukka jonka sisällä "pontteri" sukeltaa puuhun etsien oikeaa paikkaa lisättävälle alkiolle. Valitsee vasemman tai oikean lapsen comparatorilla hyödyntäen puun järjestystä. Hakualue puolittuu joka kierroksella. $O(log(n))$.
+- **get(K key)**: Sama toimintaperiaate kuin `add()`. $O(log(n))$.
+- **find(Predicate<V> searcher)**: Rekursiivinen funktio sukeltaa puuhun InOrder-järjestyksessä. Koska `searcher` osaa vain yhtäsuuruuden, on jokainen alkio testattava yksitellen, joten pahimmassa tapauksessa funktio käy jokaisen alkion läpi. $O(n)$
+- **size()**: Laskee puun solmujen lukumäärän hyödyntämällä juurisolmun lasten lukumäärää, joka päivittyy `add()`-funktiossa. $O(1)$.
+- **clear()**: Asettaa `root`-solmun `null`iksi. $O(1)$.
+- **toArray()**: Rekursiivinen funktio käy kaikki puun solmut läpi InOrder-järjestyksessä lisäten ne samalla taulukkoon. $O(n)$.
+- **indexOf(K itemKey)** Rekursiivinen funktio käy puun läpi InOrder-järjestyksessä kasvattaen samalla `AtonicInteger` indeksiä ja palauttaa sen jos `itemKey`tä vastaava alkio löytyy. $O(n)$.
+- **getIndex(int index)**: Sama toimintaperiaate kuin `indexOf()` mutta palauttaa solmun kun ehto `AtomicIdex == index` on saavutettu. $O(n)$.
+- **findIndex(Predicate<V> searcher)**: Käytännössä sama funktio kuin `indexOf` mutta comparatorin sijasta käytetään predikaattia. $O(n)$.
+- **accept(Visitor<K, V> visitor)**: $O(1)$.
+
 ### Mittaukset
 
 #### Simple Container
@@ -250,19 +263,6 @@ Visitorin avulla kerätyn datan perusteella hakupuu suoriutui varsin hyvin verra
 
 Tämä huomataan etenkin vertaamalla ideaalia syvyyttä minimi- ja maksimisyvyyksiin. Maksimisyvyys kertoo meille että nimien aakkosjärjestyksessä löytyy ainakin yksi klusteri jonka järjestäminen hakupuuhun johtaa yli tuplasti ideaalia syvempään oksaan.  
 Minimisyvyys puolestaan kertoo alueesta joissa aakkosjärjestettyjä nimiä on niin harvassa että niiden järjestämiseen vaadittavan oksan syvyys on puolet ideaalista.
-
-#### Algoritmit
-
-- **add(K key, V value)**: Silmukka jonka sisällä "pontteri" sukeltaa puuhun etsien oikeaa paikkaa lisättävälle alkiolle. Valitsee vasemman tai oikean lapsen comparatorilla hyödyntäen puun järjestystä. Hakualue puolittuu joka kierroksella. $O(log(n))$.
-- **get(K key)**: Sama toimintaperiaate kuin `add()`. $O(log(n))$.
-- **find(Predicate<V> searcher)**: Rekursiivinen funktio sukeltaa puuhun InOrder-järjestyksessä. Koska `searcher` osaa vain yhtäsuuruuden, on jokainen alkio testattava yksitellen, joten pahimmassa tapauksessa funktio käy jokaisen alkion läpi. $O(n)$
-- **size()**: Laskee puun solmujen lukumäärän hyödyntämällä juurisolmun lasten lukumäärää, joka päivittyy `add()`-funktiossa. $O(1)$.
-- **clear()**: Asettaa `root`-solmun `null`iksi. $O(1)$.
-- **toArray()**: Rekursiivinen funktio käy kaikki puun solmut läpi InOrder-järjestyksessä lisäten ne samalla taulukkoon. $O(n)$.
-- **indexOf(K itemKey)** Rekursiivinen funktio käy puun läpi InOrder-järjestyksessä kasvattaen samalla `AtonicInteger` indeksiä ja palauttaa sen jos `itemKey`tä vastaava alkio löytyy. $O(n)$.
-- **getIndex(int index)**: Sama toimintaperiaate kuin `indexOf()` mutta palauttaa solmun kun ehto `AtomicIdex == index` on saavutettu. $O(n)$.
-- **findIndex(Predicate<V> searcher)**: Käytännössä sama funktio kuin `indexOf` mutta comparatorin sijasta käytetään predikaattia. $O(n)$.
-- **accept(Visitor<K, V> visitor)**: $O(1)$.
 
 #### BST vs Simple Container (Array)
 
@@ -305,5 +305,63 @@ Minimisyvyys puolestaan kertoo alueesta joissa aakkosjärjestettyjä nimiä on n
 - **ensureCapacity(int capacity)**: Koska taulukon koon muuttaminen vaikuttaa `calculateIndex()`-metodissa laskettuihin indekseihin, alkiot eivät päädy erikokoisissa taulukoissa samoihin indekseihin. Siksi taulukon koota muuttaessa on jokainen taulukon alkio indeksoitava uudestaan. $O(n)$.
 - **clear()**: Korvaa taulukon samankokoisella tyhjällä taulukolla. $O(1)$.
 - **toArray()**: Käy hajautustaulukon läpi ja kopio jokaisen alkion yksi kerrallaan uuteen palautettavaan taulukkoon. $O(n)$.
+
+### Mittaukset
+
+#### Simple Container
+
+![compare simple-container](task-07-compare-simple-container.png)
+
+#### BST
+
+![compare bst](task-07-compare-bst.png)
+
+#### Simple Keyed Container
+
+![compare simple keyed container](task-08-table-compare-simple-keyed-container.png)
+
+#### Hashtable
+
+![compare hashtable](task-08-table-compare-hashtable.png)
+
+### Analyysi
+
+---
+
+#### Add
+
+1. Simple Keyed Container ja Hashtable $O(1)$
+2. BST $O(log(n))$
+3. Simple Container $O(n)$
+
+SKC toimii jonona jonka tarvitsee vain lisätä uusi alkio jonon jatkoksi. Hashtablen tarvitsee vain laskea alkiolle indeksi. BST sen sijaan joutuu hakemaan puusta järjestyksen mukaista paikkaa alkolle, mutta hakualue puolittuu joka askeleella. Hitain Simple Container joutuu käymään taulukkoaan läpi alkio kerrallaan kunnes se löytää vapaan paikan.
+
+---
+
+#### ToArray ja sort
+
+1. BST $O(n)$
+2. Muut $O(n*log(n)) + O(n)$
+
+Kaikki datarakenteet suorittavat `toArray()`-metodin kopioimalla jokaisen alkion yksi kerrallaan palautettavaan taulukkoon, mutta vain BST on valmiiksi järjestetty. Muut datarakenteet on lajiteltava *QuickSort*-algoritmillä ennen tai jälkeen kopioinnin.
+
+---
+
+#### Key Search
+
+1. Hashtable $O(1)$
+2. BST ja Simple Container $O(log(n))$
+3. Simple Keyed Container $O(n)$
+
+Hashtablen ei tarvitse etsiä avaimia, koska avain toimii `calculateIndex()`-metodin avulla suoraan taulukkoindeksinä.  
+BST voi hyödyntää sisäistä järjestystään avainta haettaessa, puolittaen hakualueen jokaisella askelella alas puuta.  
+Samaan aikakompleksisuuteen yltää Simple Container, koska järjestämisen jälkeen voidaan hyödyntää `indexOf()`-metodia joka on toteutettu $O(log(n))$ binäärihaku-algoritmilla. Löydetyllä indeksillä saadaan `get(int index)`-metodilla haluttu alkio ajassa $O(1)$.  
+Simple Keyed Containerille ei ole toteutettu `IndexOf()`-metodia eikä se ole hakuvaiheessa järjestyksessä muutenkaan, joten sen haku on suoritettava hitaammalla `get(K key)`-metodilla ajassa $O(n)$.
+
+### Muita Mietteitä
+
+- `calculateIndex()`-metodi hyödynsi aluksi vain `Coder.hashCode()`-metodissa laskettua *Fibonacchi hash*iä mikä johti indeksien klusteroitumiseen ja hash collisioneihin mitkä hidastivat alkioiden lisäämistä. Korjasin ongelman lisäämällä `hashCode()`n perään alkulukuja hyödyntävän *Quadratic Probing*-algoritmin minkä jälkeen alkiot jakautuivat paljon tasaisemmin taulukkoon.
+- `ensureCapacity()`-metodin toteutuksessä törmäsin epäintuitiiviseen bugiin missä `get(K key)` ei enään löytänytkään alkioita sen jälkeen kun `ensureCapacity(int capacity)` oli ajettu ensimmäisen kerran. Syyksi selvisi että olin epähuomiossa laittanut koodinpätkän `arraySize = capacity;` indeksien uudelleenlaskun jälkeen, minkä vuoksi alkioiden indeksit uudessa isomassa taulukossa oli laskettu vanhan eikä uuden `arraySize`n avulla. Kun `get(K key)` ajettiin seuraavan kerran, oli `arraySize` jo päivitetty minkä vuoksi `calculateIndex()`in laskema indeksi ei enään täsmännytkään alkion oikean indeksin kanssa.
+- Mittaustulosten analysointi tuotti harmaita hiuksia. Luulin ensin mittausdatassani olevan virheitä koska BST oli yhtä nopea kuin Simple Container, jonka `get(K key)`-metodi on luokkaa $O(n)$. Kesti hetki vertailla kaikkien neljän datarakenteen metodeja ja testejä keskenään ennen kuin tajusin että Simple Containerin haku olikin tehty hyödyntämällä `indexOf()` ja `get(int index)`-metodeja eikä hitaammalla `get(E element)`-metodilla kuten Simple Keyed Container.
 
 ## 09-TASK
