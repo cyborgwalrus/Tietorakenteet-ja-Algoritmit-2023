@@ -26,6 +26,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import oy.interact.tira.model.Coder;
 import oy.interact.tira.student.graph.Edge;
@@ -33,13 +34,14 @@ import oy.interact.tira.student.graph.Graph;
 import oy.interact.tira.student.graph.Vertex;
 import oy.interact.tira.util.JSONConverter;
 
-public class GraphPerformanceTests {
+class GraphPerformanceTests {
 
 	private static final String outputFileName = "compare-graph.csv";
 	private static final String separator = ",";
 	private static int currentIndex = 0;
 	private static BufferedWriter writer = null;
-	Integer[] population = { 10,
+	Integer[] population = {
+			10,
 			100,
 			1000,
 			5000,
@@ -76,7 +78,7 @@ public class GraphPerformanceTests {
 
 	@Test
 	@Order(1)
-	// @Timeout(value = 600, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+	// @Timeout(value = 1800, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
 	void testBFSUsingCodersJSONFiles() {
 		if (null != writer) {
 			try {
@@ -134,17 +136,27 @@ public class GraphPerformanceTests {
 					Set<Vertex<Coder>> notVisited = new HashSet<Vertex<Coder>>();
 					notVisited.addAll(graphCoders);
 					int visitedCount = 0;
+					boolean featureImplemented = true;
 					while (!notVisited.isEmpty()) {
 						Vertex<Coder> from = notVisited.iterator().next();
 						List<Vertex<Coder>> visited = graph.breadthFirstSearch(from, null);
+						if (visited.size() == 0 && visitedCount == 0) {
+							// BFS not implemented, break this test.
+							featureImplemented = false;
+							break;
+						}
 						visitedCount += visited.size();
 						notVisited.removeAll(visited);
 					}
 					end = System.currentTimeMillis();
 					duration = end - start;
-					System.out.format(" Step 4/6: BFS visited %d vertices, it took %d ms%n", visitedCount, duration);
-
-					writer.append(Long.toString(duration));
+					if (featureImplemented) {
+						System.out.format(" Step 4/6: BFS visited %d vertices, it took %d ms%n", visitedCount, duration);
+						writer.append(Long.toString(duration));
+					} else {
+						System.out.println(" Step 4/6: BFS NOT IMPLEMENTED");
+						writer.append("N/A");
+					}
 					writer.append(separator);
 
 					// Do DFS from first vertex
@@ -152,16 +164,26 @@ public class GraphPerformanceTests {
 					notVisited.clear();
 					notVisited.addAll(graphCoders);
 					visitedCount = 0;
+					featureImplemented = true;
 					while (!notVisited.isEmpty()) {
 						Vertex<Coder> from = notVisited.iterator().next();
 						List<Vertex<Coder>> visited = graph.depthFirstSearch(from, null);
+						if (visited.size() == 0 && visitedCount == 0) {
+							featureImplemented = false;
+							break;
+						}
 						visitedCount += visited.size();
 						notVisited.removeAll(visited);
 					}
 					end = System.currentTimeMillis();
 					duration = end - start;
-					System.out.format(" Step 5/6: DFS visited %d vertices, it took %d ms%n", visitedCount, duration);
-					writer.append(Long.toString(duration));
+					if (featureImplemented) {
+						System.out.format(" Step 5/6: DFS visited %d vertices, it took %d ms%n", visitedCount, duration);
+						writer.append(Long.toString(duration));
+					} else {
+						System.out.println(" Step 5/6: DFS NOT IMPLEMENTED");
+						writer.append("N/A");
+					}
 					writer.append(separator);
 
 					// Do Dijkstra from first vertex to last vertex
