@@ -85,7 +85,7 @@ public class Graph<T> {
     */
    public void addEdge(Edge.EdgeType type, Vertex<T> source, Vertex<T> destination, double weight) {
       // Input checking
-      if(type == null || source == null || destination == null || weight < 1.0)
+      if(type == null || source == null || destination == null || weight < 0.0)
          return;
       
       // Create new edge
@@ -109,7 +109,7 @@ public class Graph<T> {
     */
    public void addDirectedEdge(Vertex<T> source, Vertex<T> destination, double weight) {
       // Input checking
-      if(source == null || destination == null || weight < 1.0)
+      if(source == null || destination == null || weight < 0.0)
          return;
       
       addEdge(Edge.EdgeType.DIRECTED, source, destination, weight);
