@@ -235,7 +235,12 @@ public class Coder implements Comparable<Coder> {
 	public int hashCode() {
 		// Calculate the hash value using Fibonacchi hashing
 		// https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/
-		return Integer.parseInt(this.getId()) * FIBONACCHI_MULTIPLIER;
+		String id = this.getId().replace("-", "");
+		int xorSum = 0;
+		for(int i = 0; i + 6 < 32; i += 5){
+			xorSum = xorSum ^ Integer.parseInt(id.substring(i, i + 5), 16);
+		}
+		return xorSum * FIBONACCHI_MULTIPLIER;
 	}
 
 }
