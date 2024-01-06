@@ -221,17 +221,18 @@ public class Graph<T> {
    public List<Vertex<T>> depthFirstSearch(Vertex<T> from, Vertex<T> target) {
       // Stack for vertexes that need to be visited
       Stack<Vertex<T>> stack = new Stack<Vertex<T>>();
+      stack.push(from);
       // Set for visited vertexes
       Set<Vertex<T>> visited = new HashSet<>();
+      visited.add(from);
       // List for visited vertexes in visit order
       List<Vertex<T>> visitList = new ArrayList<>();
+      visitList.add(from);
       // Hashtable for total distance to a given vertex
       Map<Vertex<T>, Integer> distance = new Hashtable<>();
       distance.put(from, 0);
 
-      stack.push(from);
-      visited.add(from);
-
+      outerLoop: // Label is needed to continue the outer loop from the inner for-loop
       while (stack.isEmpty() == false) {
          // Peek at the topmost vertex in the stack
          Vertex<T> node = stack.peek();
@@ -244,8 +245,14 @@ public class Graph<T> {
             if (visited.contains(nextNode) == false) {
                stack.push(nextNode);
                visited.add(nextNode);
+               visitList.add(nextNode);
                distance.put(nextNode, distance.get(node) + 1);
-               continue;
+
+               // If target vertex was given and found, end the search
+               if (target != null && nextNode.equals(target))
+                  return visitList;
+
+               continue outerLoop;
             }
          }
          // All edges visited, go back to previous vertex
