@@ -7,6 +7,7 @@ import oy.interact.tira.student.graph.Edge.EdgeType;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  * path finding algorithm.
  * <p>
  * The class needs your attention, dear student. Implement the methods
- * marked TODO in the comments, based on what you have learned about
+ * marked todo in the comments, based on what you have learned about
  * graphs.
  * <p>
  * The Graph as a generic (template) class can use any data types conforming to 
@@ -42,7 +43,8 @@ public class Graph<T> {
     * depending on the application requirements.
     */
    public Graph() {
-      // TODO: Student: allocate necessary member variables.
+      // TODO: Student: allocate necessary member variables
+      this.edgeList = new Hashtable<Vertex<T>, List<Edge<T>>>();
    }
 
    /**
@@ -58,8 +60,10 @@ public class Graph<T> {
     * @return Returns the created vertex, placed in the graph's edge list.
     */
    public Vertex<T> createVertexFor(T element) {
-      // TODO: Student, implement this.
-      return null;
+      Vertex<T> newVertex = new Vertex<T>(element);
+      edgeList.put(newVertex, new ArrayList<Edge<T>>());
+      
+      return newVertex;
    }
 
    /**
@@ -68,8 +72,7 @@ public class Graph<T> {
     * @return A Set with all the vertices of the graph.
     */
    public Set<Vertex<T>> getVertices() {
-      // TODO: Student, implement this.
-      return null;
+      return edgeList.keySet();
    }
 
    /**
@@ -81,7 +84,20 @@ public class Graph<T> {
     * @param weight The weight of the edge.
     */
    public void addEdge(Edge.EdgeType type, Vertex<T> source, Vertex<T> destination, double weight) {
-      // TODO: Student, implement this.
+      // Input checking
+      if(type == null || source == null || destination == null || weight < 1.0)
+         return;
+      
+      // Create new edge
+      Edge<T> newEdge = new Edge<>(source, destination, weight);
+
+      // Add new edge to the source vertex
+      edgeList.get(source).add(newEdge);
+
+      // If the edge type is undirected (not one way),
+      // add a reversed version of new edge to the destination
+      if(type == Edge.EdgeType.UNDIRECTED)
+         edgeList.get(destination).add(newEdge.reversed());
    }
 
    /**
@@ -92,7 +108,11 @@ public class Graph<T> {
     * @param weight The weight of the edge.
     */
    public void addDirectedEdge(Vertex<T> source, Vertex<T> destination, double weight) {
-      // TODO: Student, implement this.
+      // Input checking
+      if(source == null || destination == null || weight < 1.0)
+         return;
+      
+      addEdge(Edge.EdgeType.DIRECTED, source, destination, weight);
    }
 
    /**
@@ -102,8 +122,7 @@ public class Graph<T> {
     * @return Returns the edges of the vertex or null if no edges from the source.
     */
    public List<Edge<T>> getEdges(Vertex<T> source) {
-      // TODO: Student, implement this.
-      return null;
+      return edgeList.get(source);
    }
 
    /**
@@ -115,7 +134,16 @@ public class Graph<T> {
     * @return The vertex containing the node, or null if no vertex contains the element.
     */
    public Vertex<T> getVertexFor(T element) {
-      // TODO: Student, implement this.
+      // Input checking
+      if(element == null)
+         return null;
+      
+      // Create a new vertex using element and look for it in the edgeList.
+      // If found, return it, else return null
+      Vertex<T> targetVertex = new Vertex<T>(element);
+      if(edgeList.containsKey(targetVertex))
+         return targetVertex; 
+      
       return null;
    }
 
@@ -332,24 +360,23 @@ public class Graph<T> {
     */
    @Override
    public String toString() {
-      // TODO: Student.
-      return ""; // Remove this and uncomment code below when you are ready.
-      // StringBuilder output = new StringBuilder();
-      // for (Map.Entry<Vertex<T>, List<Edge<T>>> entry : edgeList.entrySet()) {
-      //    output.append("[");
-      //    output.append(entry.getKey().toString());
-      //    output.append("] -> [ ");
-      //    int counter = 0;
-      //    int count = entry.getValue().size();
-      //    for (Edge<T> edge : entry.getValue()) {
-      //       output.append(edge.getDestination().toString());
-      //       if (counter < count - 1) {
-      //          output.append(", ");
-      //       }
-      //       counter++;
-      //    }
-      //    output.append(" ]\n");
-      // }
-      // return output.toString();
+
+      StringBuilder output = new StringBuilder();
+      for (Map.Entry<Vertex<T>, List<Edge<T>>> entry : edgeList.entrySet()) {
+         output.append("[");
+         output.append(entry.getKey().toString());
+         output.append("] -> [ ");
+         int counter = 0;
+         int count = entry.getValue().size();
+         for (Edge<T> edge : entry.getValue()) {
+            output.append(edge.getDestination().toString());
+            if (counter < count - 1) {
+               output.append(", ");
+            }
+            counter++;
+         }
+         output.append(" ]\n");
+      }
+      return output.toString();
    }
 }
