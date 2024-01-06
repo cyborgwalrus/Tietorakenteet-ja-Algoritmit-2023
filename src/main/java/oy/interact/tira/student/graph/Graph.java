@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 
 import oy.interact.tira.student.ArrayQueue;
 import oy.interact.tira.student.graph.Edge.EdgeType;
@@ -211,9 +212,41 @@ public class Graph<T> {
     * @return Returns all the visited vertices traversed while doing DFS.
     */
    public List<Vertex<T>> depthFirstSearch(Vertex<T> from, Vertex<T> target) {
-      List<Vertex<T>> visited = new ArrayList<>();
-      // TODO: Student, implement this.
-      return visited;
+      // Stack for vertexes that need to be visited
+      Stack<Vertex<T>> stack = new Stack<Vertex<T>>();
+      // Set for visited vertexes
+      Set<Vertex<T>> visited = new HashSet<>();
+      // List for visited vertexes in visit order
+      List<Vertex<T>> visitList = new ArrayList<>();
+      // Hashtable for total distance to a given vertex
+      Map<Vertex<T>, Integer> distance = new Hashtable<>();
+      distance.put(from, 0);
+      
+      stack.push(from);
+      visited.add(from);
+
+      while(stack.isEmpty() == false){
+         // Peek at the topmost vertex in the stack
+         Vertex<T> node = stack.peek();
+         // Visit all of it's edges
+         for(Edge<T> edge: edgeList.get(node)){
+            Vertex<T> nextNode = edge.getDestination();
+            // If the edge leads to an unvisited vertex,
+            // add the vertex to queue and found, calculate distance
+            // and visit it
+            if(visited.contains(nextNode) == false){
+               stack.push(nextNode);
+               visited.add(nextNode);
+               distance.put(nextNode, distance.get(node) + 1);
+               continue;
+            }
+         }
+         // All edges visited, go back to previous vertex
+            stack.pop();
+      }
+
+      // All vertexes visited, returning visitList
+      return visitList;
    }
    
    /**
