@@ -1,13 +1,18 @@
 package oy.interact.tira.student.graph;
 
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
+import oy.interact.tira.student.ArrayQueue;
 import oy.interact.tira.student.graph.Edge.EdgeType;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -43,7 +48,6 @@ public class Graph<T> {
     * depending on the application requirements.
     */
    public Graph() {
-      // TODO: Student: allocate necessary member variables
       this.edgeList = new Hashtable<Vertex<T>, List<Edge<T>>>();
    }
 
@@ -156,9 +160,43 @@ public class Graph<T> {
     * @return Returns all the visited vertices traversed while doing BFS, in order they were found, or an empty list.
     */
    public List<Vertex<T>> breadthFirstSearch(Vertex<T> from, Vertex<T> target) {
-      List<Vertex<T>> visited = new ArrayList<>();
-      // TODO: Student, implement this.
-      return visited;
+      // Queue for vertexes that need to be visited
+      ArrayQueue<Vertex<T>> queue = new ArrayQueue<Vertex<T>>();
+      // Set for visited vertexes
+      Set<Vertex<T>> found = new HashSet<>();
+      // List for visited vertexes in visit order
+      List<Vertex<T>> visitList = new ArrayList<>();
+      // Hashtable for total distance to a given vertex
+      Map<Vertex<T>, Integer> distance = new Hashtable<>();
+      distance.put(from, 0);
+      
+      queue.enqueue(from);
+      found.add(from);
+
+      while(queue.isEmpty() == false){
+         // Visit a vertex from the queue
+         Vertex<T> node = queue.dequeue();
+         visitList.add(node);
+         
+         // If target vertex was given and found, end the search
+         if(target != null && node.equals(target))
+            break;
+
+         // Go through all of it's edges
+         for(Edge<T> edge: edgeList.get(node)){
+            Vertex<T> nextNode = edge.getDestination();
+            // If the edge leads to an unvisited vertex,
+            // add the vertex to queue and found, calculate distance
+            if(found.contains(nextNode) == false){
+               queue.enqueue(nextNode);
+               found.add(nextNode);
+               distance.put(nextNode, distance.get(node) + 1);
+            }
+         }
+      }
+
+      // All vertexes visited, returning visitList
+      return visitList;
    }
 
    /**
