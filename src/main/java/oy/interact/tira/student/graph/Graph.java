@@ -98,11 +98,11 @@ public class Graph<T> {
       // Create new edge
       Edge<T> newEdge = new Edge<>(source, destination, weight);
 
-      // Add new edge to the source vertex
+      // Add the new edge from source to destination
       edgeList.get(source).add(newEdge);
 
       // If the edge type is undirected (not one way),
-      // add a reversed version of new edge to the destination
+      // add a reversed version of new edge
       if (type == Edge.EdgeType.UNDIRECTED)
          edgeList.get(destination).add(newEdge.reversed());
    }
