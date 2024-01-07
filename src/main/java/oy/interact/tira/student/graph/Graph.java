@@ -279,9 +279,24 @@ public class Graph<T> {
     *         is empty.
     */
    public List<T> disconnectedVertices(Vertex<T> toStartFrom) {
-      List<T> notInVisited = new ArrayList<>();
-      // TODO: Student, implement this.
-      return notInVisited;
+      if(toStartFrom == null)
+         return null;
+      
+      Set<Vertex<T>> notVisited = new HashSet<>();
+      Set<Vertex<T>> visited = new HashSet<>();
+      
+      // Add all vertexes to a set
+      notVisited = edgeList.keySet();
+      // BFS the graph and add visited vertexes to a set
+      visited.addAll(breadthFirstSearch(toStartFrom, null));
+      // Remove all visited vertexes from notVisited
+      notVisited.removeAll(visited);
+      
+      // Convert the set of vertexes into a list of elements, then return it
+      List<T> notVisitedList = new ArrayList<>();
+      for(Vertex<T> vertex: notVisited)
+         notVisitedList.add(vertex.getElement());
+      return notVisitedList;
    }
 
    /**
@@ -293,8 +308,9 @@ public class Graph<T> {
     * @return True if the graph is disconnected.
     */
    public boolean isDisconnected(Vertex<T> toStartFrom) {
-      // TODO: Student, implement this.
-      return false;
+      // If disconnectedVertices returns an empty list,
+      // all vertices are connected and isDisconnected returns false
+      return !disconnectedVertices(toStartFrom).isEmpty();
    }
 
    /**
