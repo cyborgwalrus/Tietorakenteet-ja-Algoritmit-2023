@@ -287,7 +287,11 @@ Minimisyvyys puolestaan kertoo alueesta joissa aakkosjärjestettyjä nimiä on n
 
 #### Coder
 
-- **HashCode()**: Käytin Fibonacchi hashingia jossa `Coder.getId()` kerrotaan valmiiksi lasketulla vakiolla joka laskettiin kaavalla $2^{30}/\phi$, missä $\phi$ on kultaisen leikkauksen likiarvo.
+- **HashCode()**: Toteutettu *Fibonacchi hashing*illä
+  1. `Coder.getId()` pilkotaan palasiksi
+  2. palaset XOR-ataan keskenään
+  3. lopputulos kerrotaan valmiiksi lasketulla `FIBONACCHI_MULTIPLIER`-vakiolla ja tulon annetaan ylivuotaa
+- `FIBONACCHI_MULTIPLIER`: Lasketaan kaavalla $2^{30}/\phi$, missä $\phi$ on kultaisen leikkauksen likiarvo.
 
 #### HashTableContainer
 
