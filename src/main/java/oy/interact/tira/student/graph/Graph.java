@@ -1,8 +1,6 @@
 package oy.interact.tira.student.graph;
 
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
@@ -13,8 +11,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -515,7 +511,7 @@ public class Graph<T> {
       // TODO: Student, implement this if you want to (optional task).
    }
 
-   // STUDENTS: TODO: Uncomment the code below and use it as a sample on how
+   // STUDENTS: Uncomment the code below and use it as a sample on how
    // to interate over vertices and edges in one situation.
    // If you use some other name for your edge list than edgeList, then
    // rename that in the code below! Otherwise you will have compiler errors.
