@@ -45,6 +45,7 @@ public class Graph<T> {
     * a suitable type of Map, depending on application needs.
     */
    private Map<Vertex<T>, List<Edge<T>>> edgeList = null;
+   private Map<Integer, Vertex<T>> vertices = null;
 
    /**
     * Constructor instantiates a suitable Map data structure
@@ -52,6 +53,7 @@ public class Graph<T> {
     */
    public Graph() {
       this.edgeList = new Hashtable<Vertex<T>, List<Edge<T>>>();
+      this.vertices = new Hashtable<Integer, Vertex<T>>();
    }
 
    /**
@@ -69,6 +71,7 @@ public class Graph<T> {
    public Vertex<T> createVertexFor(T element) {
       Vertex<T> newVertex = new Vertex<T>(element);
       edgeList.put(newVertex, new ArrayList<Edge<T>>());
+      vertices.put(newVertex.hashCode(), newVertex);
 
       return newVertex;
    }
@@ -150,13 +153,11 @@ public class Graph<T> {
       if (element == null)
          return null;
 
-      // Create a new vertex using element and look for it in the edgeList.
-      // If found, return it, else return null
-      Vertex<T> targetVertex = new Vertex<T>(element);
-      if (edgeList.containsKey(targetVertex))
-         return targetVertex;
+      // Use the element hashCode to look for the vertex containing element
+      // if it isn't found, vertex is null
+      Vertex<T> vertex = vertices.get(element.hashCode());
 
-      return null;
+      return vertex;
    }
 
    /**
