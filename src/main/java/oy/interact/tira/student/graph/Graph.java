@@ -1,11 +1,13 @@
 package oy.interact.tira.student.graph;
 
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.Stack;
 
 import oy.interact.tira.student.ArrayQueue;
 import oy.interact.tira.student.graph.Edge.EdgeType;
+import oy.interact.tira.student.graph.Visit.Type;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,6 +15,8 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
+
+import java.util.Comparator;
 
 /**
  * Implementation of the graph data structure and associated algorithms.
@@ -434,7 +438,27 @@ public class Graph<T> {
       result.path = null;
       result.steps = 0;
       result.totalWeigth = 0.0;
-      // TODO: Student, implement this.
+
+      Map<Vertex<T>, Visit<T>> pathsFromStart = shortestPathsFrom(start);
+      List<Edge<T>> shortestPath = shortestPathsTo(end, pathsFromStart);
+
+      // If shortestPath is empty, path wasn't found
+      if(shortestPath.isEmpty() == false){
+         // Path was found, adding it to result
+         result.pathFound = true;
+         result.path = new ArrayList<>();
+         result.steps = shortestPath.size();
+         
+         // Add the first vertex from the shortest path into result.path
+         result.path.add(shortestPath.get(0).getSource().getElement());
+         // Loop through the edges in the path,
+         // adding all the destination vertices along the way into the path list,
+         // and calculating total weight of the edges
+         for(Edge<T> edge: shortestPath){
+            result.path.add(edge.getDestination().getElement());
+            result.totalWeigth += edge.getWeigth();
+         }
+      }
       return result;
    }
 
@@ -450,15 +474,63 @@ public class Graph<T> {
     * @return Returns the vertices forming the route to the destination.
     */
    private List<Edge<T>> route(Vertex<T> toDestination, Map<Vertex<T>, Visit<T>> paths) {
+      // List of edges for holding the path to destination vertex
       List<Edge<T>> path = new ArrayList<>();
-      // TODO: Student, implement this.
+
+       if(paths.size() == 0)
+         return path;
+   
+      // Start at the destination vertex
+      Vertex<T> vertex = toDestination;
+      // Step back a visit from the destination
+      Visit<T> visit = paths.get(vertex);
+
+      // Step through visits until start visit is reached
+      while(visit.type != Visit.Type.START){
+         // Add the edge we just traversed to the path
+         path.add(0, visit.edge);
+         // Step to the next visit
+         vertex = visit.edge.getSource();
+         visit = paths.get(vertex);
+      }
+      // All visits traversed, returning path
       return path;
    }
 
+   /**
+    * Calculates the total distance of visits from start to destination
+    * @param toDestination The destination vertex.
+    * @param viaPath Dictionary of visits from start to destination
+    * @return Returns sum of edge weights travelled from start to destination.
+    */
    private double distance(Vertex<T> toDestination, Map<Vertex<T>, Visit<T>> viaPath) {
-      double distance = 0.0;
-      // TODO: Student, implement this.
-      return distance;
+      double totalDistance = 0.0;
+
+      // Get the route from start to destination using the path in viaPath
+      List<Edge<T>> path = route(toDestination, viaPath);
+      // Loop through the edges in the path and sum their weights
+      for(Edge<T> edge: path)
+         totalDistance += edge.getWeigth();
+      
+      return totalDistance;
+   }
+
+   /*
+    * Comparator for comparing path distances
+    */
+   class DistanceComparator implements Comparator<Vertex<T>>{
+      private Graph<T> graph;
+      private Map<Vertex<T>, Visit<T>> paths;
+
+      public DistanceComparator(Graph<T> graph, Map<Vertex<T>, Visit<T>> paths){
+         this.graph = graph;
+         this.paths = paths;
+      }
+
+      @Override
+      public int compare(Vertex<T> left, Vertex<T> right){
+         return (int)(graph.distance(left, paths) - graph.distance(right, paths));
+      }
    }
 
    /**
@@ -473,11 +545,47 @@ public class Graph<T> {
     * @see oy.tol.tira.graph.Graph#route(Vertex, Map)
     */
    private Map<Vertex<T>, Visit<T>> shortestPathsFrom(Vertex<T> start) {
+      // Map for visits from vertices
+      Map<Vertex<T>, Visit<T>> paths = new HashMap<>();
+      // Visit for holding the starting visit
       Visit<T> visit = new Visit<>();
       visit.type = Visit.Type.START;
-      Map<Vertex<T>, Visit<T>> paths = new HashMap<>();
-      // TODO: Student, implement this.
+      // Add starting path from starting vertex to paths
+      paths.put(start, visit);
+      // Priority Queue for holding verticies, sorted by distance
+      PriorityQueue<Vertex<T>> priorityQueue = new PriorityQueue<>(new DistanceComparator(this, paths));
+      priorityQueue.add(start);
+
+      // Loop through the priority queue until it is empty
+      while(priorityQueue.isEmpty() == false){
+         // Get top vertex from the priority queue
+         Vertex<T> vertex = priorityQueue.remove();
+         // Loop through its edges
+         for(Edge<T> edge: getEdges(vertex)){
+            double weight = edge.getWeigth();
+            // If the edge leads to an unvisited vertex OR
+            // going through it leads to a shorter path,
+            // add it to paths and its destination to priority queue
+            if(paths.containsKey(edge.getDestination()) == false ||
+               distance(vertex, paths) + weight < distance(edge.getDestination(), paths)){
+                  paths.put(edge.getDestination(),new Visit<T>(Type.EDGE, edge));
+                  priorityQueue.add(edge.getDestination());
+               }
+         }
+
+      }
+      // All paths found, returning
       return paths;
+   }
+
+   /**
+    * Finds the shortest path to the destination vertex.
+    * @param destination destination vertex
+    * @param paths Map of the shortest paths from starting vertex
+    * @return Returns the shortest path to destination as a list of edges
+    */
+   private List<Edge<T>> shortestPathsTo(Vertex<T> destination, Map<Vertex<T>, Visit<T>> paths){
+      return route(destination, paths);
    }
 
    // OPTIONAL task in the course!
