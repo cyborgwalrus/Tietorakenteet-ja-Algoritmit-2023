@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
@@ -99,12 +100,12 @@ public class Graph<T> {
       Edge<T> newEdge = new Edge<>(source, destination, weight);
 
       // Add the new edge from source to destination
-      edgeList.get(source).add(newEdge);
+      getEdges(source).add(newEdge);
 
       // If the edge type is undirected (not one way),
       // add a reversed version of new edge
       if (type == Edge.EdgeType.UNDIRECTED)
-         edgeList.get(destination).add(newEdge.reversed());
+         getEdges(destination).add(newEdge.reversed());
    }
 
    /**
@@ -168,11 +169,11 @@ public class Graph<T> {
     *         they were found, or an empty list.
     */
    public List<Vertex<T>> breadthFirstSearch(Vertex<T> from, Vertex<T> target) {
-      // Queue for vertexes that need to be visited
+      // Queue for vertices that need to be visited
       ArrayQueue<Vertex<T>> queue = new ArrayQueue<Vertex<T>>();
-      // Set for visited vertexes
+      // Set for visited vertices
       Set<Vertex<T>> found = new HashSet<>();
-      // List for visited vertexes in visit order
+      // List for visited vertices in visit order
       List<Vertex<T>> visitList = new ArrayList<>();
       // Hashtable for total distance to a given vertex
       Map<Vertex<T>, Integer> distance = new Hashtable<>();
@@ -191,7 +192,7 @@ public class Graph<T> {
             break;
 
          // Go through all of it's edges
-         for (Edge<T> edge : edgeList.get(node)) {
+         for (Edge<T> edge : getEdges(node)) {
             Vertex<T> nextNode = edge.getDestination();
             // If the edge leads to an unvisited vertex,
             // add the vertex to queue and found, calculate distance
@@ -203,7 +204,7 @@ public class Graph<T> {
          }
       }
 
-      // All vertexes visited, returning visitList
+      // All vertices visited, returning visitList
       return visitList;
    }
 
@@ -219,13 +220,13 @@ public class Graph<T> {
     * @return Returns all the visited vertices traversed while doing DFS.
     */
    public List<Vertex<T>> depthFirstSearch(Vertex<T> from, Vertex<T> target) {
-      // Stack for vertexes that need to be visited
+      // Stack for vertices that need to be visited
       Stack<Vertex<T>> stack = new Stack<Vertex<T>>();
       stack.push(from);
-      // Set for visited vertexes
+      // Set for visited vertices
       Set<Vertex<T>> visited = new HashSet<>();
       visited.add(from);
-      // List for visited vertexes in visit order
+      // List for visited vertices in visit order
       List<Vertex<T>> visitList = new ArrayList<>();
       visitList.add(from);
       // Hashtable for total distance to a given vertex
@@ -237,7 +238,7 @@ public class Graph<T> {
          // Peek at the topmost vertex in the stack
          Vertex<T> node = stack.peek();
          // Visit all of it's edges
-         for (Edge<T> edge : edgeList.get(node)) {
+         for (Edge<T> edge : getEdges(node)) {
             Vertex<T> nextNode = edge.getDestination();
             // If the edge leads to an unvisited vertex,
             // add the vertex to queue and found, calculate distance
@@ -259,7 +260,7 @@ public class Graph<T> {
          stack.pop();
       }
 
-      // All vertexes visited, returning visitList
+      // All vertices visited, returning visitList
       return visitList;
    }
 
@@ -279,22 +280,31 @@ public class Graph<T> {
     *         is empty.
     */
    public List<T> disconnectedVertices(Vertex<T> toStartFrom) {
-      if(toStartFrom == null)
-         return null;
-      
-      Set<Vertex<T>> notVisited = new HashSet<>();
+      // If toStartFrom was null, replace it with the first vertex in the graph
+      if (toStartFrom == null) {
+         toStartFrom = getVertices().stream().findFirst().get();
+      }
+
+      // If the starting vertex has no edges, return it
+      if (getEdges(toStartFrom).isEmpty()) {
+         List<T> notVisitedList = new ArrayList<>();
+         notVisitedList.add(toStartFrom.getElement());
+         return notVisitedList;
+      }
+
+      Set<Vertex<T>> notVisited = new HashSet<>(getVertices());
       Set<Vertex<T>> visited = new HashSet<>();
-      
-      // Add all vertexes to a set
-      notVisited = edgeList.keySet();
-      // BFS the graph and add visited vertexes to a set
+
+      // Add all vertices to a set
+      //notVisited = getVertices();
+      // BFS the graph and add visited vertices to a set
       visited.addAll(breadthFirstSearch(toStartFrom, null));
-      // Remove all visited vertexes from notVisited
+      // Remove all visited vertices from notVisited
       notVisited.removeAll(visited);
-      
-      // Convert the set of vertexes into a list of elements, then return it
+
+      // Convert the set of vertices into a list of elements, then return it
       List<T> notVisitedList = new ArrayList<>();
-      for(Vertex<T> vertex: notVisited)
+      for (Vertex<T> vertex : notVisited)
          notVisitedList.add(vertex.getElement());
       return notVisitedList;
    }
@@ -331,8 +341,60 @@ public class Graph<T> {
     * @return Returns true if the graph has cycles.
     */
    public boolean hasCycles(EdgeType edgeType, Vertex<T> fromVertex) {
-      // TODO: Student, implement this.
+      // If fromVertex is null, replace it with the first vertex in the graph
+      if (fromVertex == null)
+         fromVertex = getVertices().stream().findFirst().get();
+      // If the starting vertex has no edges, return false
+      if (getEdges(fromVertex).isEmpty())
+         return false;
+
+      if (isDisconnected(fromVertex))
+         return false;
+
+      // Stack for vertices that need to be visited
+      Stack<Vertex<T>> stack = new Stack<Vertex<T>>();
+      // Set for visited vertices
+      Set<Vertex<T>> visited = new HashSet<>();
+
+      stack.push(fromVertex);
+      visited.add(fromVertex);
+
+      outerLoop: // Label is needed to continue the outer loop from the inner for-loop
+      while (stack.isEmpty() == false) {
+         // Peek at the topmost vertex in the stack
+         Vertex<T> node = stack.peek();
+         // Visit all of it's edges
+         for (Edge<T> edge : getEdges(node)) {
+            Vertex<T> nextNode = edge.getDestination();
+
+            if (visited.contains(nextNode)) {
+               // Previously visited vertex found
+
+               // Cycle detected if the graph type is directed.
+               if (edgeType == EdgeType.DIRECTED)
+                  return true;
+               // If the graph is undirected, going back to the source
+               // vertex from the destination doesn't count as a cycle
+               else if (!node.equals(nextNode))
+                  return true;
+            }
+
+            // If the edge leads to an unvisited vertex,
+            // add the vertex to queue and found and visit it
+            if (visited.contains(nextNode) == false) {
+
+               stack.push(nextNode);
+               visited.add(nextNode);
+
+               continue outerLoop;
+            }
+         }
+         // All edges visited, go back to previous vertex
+         stack.pop();
+      }
+      // No cycles found
       return false;
+
    }
 
    // Dijkstra starts here.
