@@ -287,12 +287,10 @@ public class Graph<T> {
          notVisitedList.add(toStartFrom.getElement());
          return notVisitedList;
       }
-
+      // Add all vertices to a set
       Set<Vertex<T>> notVisited = new HashSet<>(getVertices());
       Set<Vertex<T>> visited = new HashSet<>();
 
-      // Add all vertices to a set
-      //notVisited = getVertices();
       // BFS the graph and add visited vertices to a set
       visited.addAll(breadthFirstSearch(toStartFrom, null));
       // Remove all visited vertices from notVisited
