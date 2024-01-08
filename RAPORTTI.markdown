@@ -370,28 +370,37 @@ Simple Keyed Containerille ei ole toteutettu `IndexOf()`-metodia eikä se ole ha
 
 ## 09-TASK
 
+### Valinnaiset tehtävät
+
+Tein `breadthFirstSearch()`in lisäksi:
+
+- `depthFirstSearch()`
+- `disconnectedVertices()`
+- `isDisconnected()`
+- `hasCycles()`
+- `shortestPathDijkstra()` ja sen apumetodit
+
 ### Mittaukset
 
-#### Hashtable
+#### HashTable
 
-| Vertex count | Edge count | Fill time | Fill/V+E | BFS    | DFS    | Dijkstra | BFS/V+E | DFS/V+E | Dijkstra/V+E | BFS/V   | DFS/V  | Dijkstra/V | BFS/E  | DFS/E  | Dijkstra/E |
-| :----------- | :--------- | :-------- | :------- | :----- | :----- | :------- | :------ | :------ | :----------- | :------ | :----- | :--------- | :----- | :----- | :--------- |
-| 10           | 40         | 2         | 0,0400   | 1      | 1      | 3        | 0,0200  | 0,0200  | 0,0600       | 0,1     | 0,1000 | 0,3000     | 0,0250 | 0,0250 | 0,0750     |
-| 100          | 532        | 2         | 0,0032   | 1      | 2      | 8        | 0,0016  | 0,0032  | 0,0127       | 0,01    | 0,0200 | 0,0800     | 0,0019 | 0,0038 | 0,0150     |
-| 1000         | 5613       | 8         | 0,0012   | 31     | 27     | 63       | 0,0047  | 0,0041  | 0,0095       | 0,031   | 0,0270 | 0,0630     | 0,0055 | 0,0048 | 0,0112     |
-| 5000         | 27602      | 79        | 0,0024   | 626    | 684    | 384      | 0,0192  | 0,0210  | 0,0118       | 0,1252  | 0,1368 | 0,0768     | 0,0227 | 0,0248 | 0,0139     |
-| 10000        | 56551      | 70        | 0,0011   | 1608   | 1997   | 677      | 0,0242  | 0,0300  | 0,0102       | 0,1608  | 0,1997 | 0,0677     | 0,0284 | 0,0353 | 0,0120     |
-| 50000        | 280174     | 345       | 0,0010   | 292879 | 275233 | 4823     | 0,8870  | 0,8336  | 0,0146       | 5,85758 | 5,5047 | 0,0965     | 1,0453 | 0,9824 | 0,0172     |
-| 100000       | 557681     | 698       | 0,0011   |        |        | 12258    |         |         | 0,0186       |         |        | 0,1226     |        |        | 0,0220     |
+| Vertex count | Edge count | E/V | Fill time | Fill/V+E | BFS    | DFS    | Dijkstra | BFS/V+E | DFS/V+E | Dijkstra/V+E | BFS/V   | DFS/V  | Dijkstra/V | BFS/E  | DFS/E  | Dijkstra/E |
+| :----------- | :--------- | :---------- | :-------- | :------- | :----- | :----- | :------- | :------ | :------ | :----------- | :------ | :----- | :--------- | :----- | :----- | :--------- |
+| 10           | 40         | 4           | 2         | 0,0400   | 1      | 1      | 3        | 0,0200  | 0,0200  | 0,0600       | 0,1     | 0,1000 | 0,3000     | 0,0250 | 0,0250 | 0,0750     |
+| 100          | 532        | 5,32        | 2         | 0,0032   | 1      | 2      | 8        | 0,0016  | 0,0032  | 0,0127       | 0,01    | 0,0200 | 0,0800     | 0,0019 | 0,0038 | 0,0150     |
+| 1000         | 5613       | 5,613       | 8         | 0,0012   | 31     | 27     | 63       | 0,0047  | 0,0041  | 0,0095       | 0,031   | 0,0270 | 0,0630     | 0,0055 | 0,0048 | 0,0112     |
+| 5000         | 27602      | 5,5204      | 79        | 0,0024   | 626    | 684    | 384      | 0,0192  | 0,0210  | 0,0118       | 0,1252  | 0,1368 | 0,0768     | 0,0227 | 0,0248 | 0,0139     |
+| 10000        | 56551      | 5,6551      | 70        | 0,0011   | 1608   | 1997   | 677      | 0,0242  | 0,0300  | 0,0102       | 0,1608  | 0,1997 | 0,0677     | 0,0284 | 0,0353 | 0,0120     |
+| 50000        | 280174     | 5,60348     | 345       | 0,0010   | 292879 | 275233 | 4823     | 0,8870  | 0,8336  | 0,0146       | 5,85758 | 5,5047 | 0,0965     | 1,0453 | 0,9824 | 0,0172     |
+| 100000       | 557681     | 5,57681     | 698       | 0,0011   |        |        | 12258    |         |         | 0,0186       |         |        | 0,1226     |        |        | 0,0220     |
 
 #### Hashtable vs Hashmap
 
-|          | sum(time/v) | sum(time/v) |           |                     |
-| :------- | :---------- | :---------- | :-------- | :------------------ |
-|          | Hashtable   | hashmap     | Map/Table | avg(Map)/avg(table) |
-| BFS      | 6,28458     | 7,0319      | 1,1189    | 1,1283              |
-| DFS      | 5,9882      | 7,3940      | 1,2348    | 1,2520              |
-| Dijkstra | 0,8065      | 0,9399      | 1,1654    | 0,9904              |
+|          | Hashtable sum(ms/V) | hashmap sum(ms/V) | Map/Table | avg(Map)/avg(table) |
+| :------- | :-------- | :------ | :-------- | :------------------ |
+| BFS      | 6,28458   | 7,0319  | 1,1189    | 1,1283              |
+| DFS      | 5,9882    | 7,3940  | 1,2348    | 1,2520              |
+| Dijkstra | 0,8065    | 0,9399  | 1,1654    | 0,9904              |
 
 #### BFS
 
@@ -405,21 +414,62 @@ Simple Keyed Containerille ei ole toteutettu `IndexOf()`-metodia eikä se ole ha
 
 ![Dijkstra](task-09-graph-Dijkstra.png)
 
+### Analyysi
+
+#### HashTable vs HashMap
+
+Toteutusten väliset aikaerot vaihtelivat eri algoritmeilla ja solmujen määrällä, mutta `HashTable` oli keskimäärin $10\%-20\%$ nopeampi.
+
+#### Verkkojen tiheys
+
+verkon solmuilla oli keskimäärin $5,5$ reunaa, joten verkot olivat selvästi harvoja.
+
+#### Reunuslistan valinta
+
+`Map` on selvästi oikea ratkaisu, koska verkon käsittelyssä tulee paljon hakuoperaatioita jotka olisivat järjestämättömällä matriisilla luokkaa $O(V)$ verrattuna `Map`in $O(1)$.
+
+#### Täytön hitaus
+
+Koodariverkon täyttö oli ilman korjausta hidas, koska verkkoa täyttäessä ajettiin:
+
+- $O(V)$-silmukka jossa oli
+  - `getVertexFor()`-kutsu
+  - Koodarin kaverien kokoinen silmukka jossa oli
+    - `getVertexFor()`-kutsu
+
+Koska `getVertexFor()` on $O(V)$, oli täytön aikakompleksisuus $O(V^3)$. Korjaamalla `getVertexFor()`-toteutusta listan läpikäynnistä hajautustaulun hyödyntämiseen, saatiin sen aikakompleksisuus tiputettua luokasta $O(V)$ luokkaan $O(1)$. Näin verkon täytön aikakompleksisuus laski luokkaan $O(V)$, mutta ohjelman muistikompleksisuus tuplaantui, koska siihen lisättiin toinen solmut sisältävä tietorakenne.
+
 ### Algoritmit
 
 - **CreateVertexFor()**: Kaksi lisäystä `HashMap`-taulukoihin. $O(1)$.
-- **GetVertices()**: Kutsuu `KeySet()` jonka ensimmäisellä kutsukerralla luo setin ja palauttaa sen myöhemmillä kerroilla. Luonti $O(n)$, palautus $O(1)$.
+- **GetVertices()**: Kutsuu `KeySet()` jonka ensimmäisellä kutsukerralla luo setin ja palauttaa sen myöhemmillä kerroilla. Luonti $O(V)$, palautus $O(1)$.
 - **GetEdges(Vertex<T> source)**: Käyttää `source`-argumenttia avaimena `edgeList`-hajautustauluun, palauttaen sitä vastaavan `List<Edge<T>>`. $O(1)$.
 - **addEdge()**: Lisää `Edge<T>`-olion `source`-solmua vastaavaan `List<Edge<T>>`. Jos reuna on suuntaamaton, lisää myös sen käänteisreunan `destination`-solmun listaan. $O(1)$.
 - **addDirectedEdge()**: Kutsuu `addEdge()`. $O(1)$.
 - **getVertexFor(T element)**: Käyttää `element.hashCode()` avaimena `vertices`-hajautustauluun, palauttaen sitä vastaan `Vertex<T>`-olion. $O(1)$.
-- **breadthFirstSearch()**: Käy läpi kaikki graafin solmut ja reunat. Säilöö prosessoitavat solmut `Queue`-tietorakenteeseen. `Queue`n *First in, First out*-toimintaperiaatteesta seuraa, että haku "leviää" aloitus-solmusta joka suuntaan. $O(V+E)$.
+- **breadthFirstSearch()**: Käy läpi kaikki verkon solmut ja reunat. Säilöö prosessoitavat solmut `Queue`-tietorakenteeseen. `Queue`n *First in, First out*-toimintaperiaatteesta seuraa, että haku "leviää" aloitus-solmusta joka suuntaan. $O(V+E)$.
 - **depthFirstSearch()**: Sama kuin `breadthFirstSearch()`, mutta `Queue` on korvattu `Stack`-tietorakenteella, jonka **First in, Last out**-toimintaperiaatteesta seuraa, että haku "sukeltaa" kauemmaksi aloitus-solmusta. $O(V+E)$.
-- **disconnectedVertices(Vertex<T> toStartFrom)**: Luo kopion `getVertices()` palauttamasta setistä, käy graafin läpi leveyshaulla alkaen `toStartFrom`-solmusta ja poistaa setistä kaikki leveyshaun käymät solmut. Muuttaa jäljelle jääneen setin `Vertex<T>`-oliot listaksi niiden sisältämistä elementeistä ja palauttaa sen. $O(V+E)$.
+- **disconnectedVertices(Vertex<T> toStartFrom)**: Luo kopion `getVertices()` palauttamasta setistä, käy verkon läpi leveyshaulla alkaen `toStartFrom`-solmusta ja poistaa setistä kaikki leveyshaun käymät solmut. Muuttaa jäljelle jääneen setin `Vertex<T>`-oliot listaksi niiden sisältämistä elementeistä ja palauttaa sen. $O(V+E)$.
 - **isDisconnected()**: Kutsuu `disconnectedVertices()` ja tarkistaa onko sen palauttama lista tyhjä. $O(V+E)$.
-- **hasCycles()**: Kutsuu `isDisconnected()` ja käy graafin läpi syvyyshaulla, kunnes tulee vastaan ensimmäinen jo käyty solmu. $O(2V+2E).
+- **hasCycles()**: Kutsuu `isDisconnected()` ja käy verkon läpi syvyyshaulla, kunnes tulee vastaan ensimmäinen jo käyty solmu. $O(2V+2E).
 - **shortestPathDijkstra()**. Kutsuu `shortestPathsFrom()`, `shortestPathsTo()` ja käy läpi lyhimmän polun reunat. $O(E+Vlog(V))+O(E)+O(E)=O(3E+Vlog(V))$.
 - **route()**: Muuttaa `paths`-Mapin `Visit<T>`-oliot niitä vastaaviksi `Edge<T>`-olioiksi ja palauttaa ne listassa. Aikakompleksisuus riippuu polun pituudesta, pahimmillaan $O(E)$.
 - **distance()**: Kutsuu `route()` ja käy sen palauttaman listan läpi. $O(2E)$.
-- **shortestPathsFrom(Vertex<T> start)**: Hakee lyhimmät reitit `start`-solmusta kaikkiin muihin solmuihin Djikstran algoritmilla. `GraphPerformanceTests`in testigraafeissa keskimäärin $5,5$ reunaa per solmu eli graafit ovat harvoja. Tällöin Djikstran algoritmin aikakompleksisuus on $O(E+Vlog(V))$.
+- **shortestPathsFrom(Vertex<T> start)**: Hakee lyhimmät reitit `start`-solmusta kaikkiin muihin solmuihin Djikstran algoritmilla. `GraphPerformanceTests`in testiverkoissa keskimäärin $5,5$ reunaa per solmu eli verkot ovat harvoja. Tällöin Djikstran algoritmin aikakompleksisuus on $O(E+Vlog(V))$.
 - **shortestPathsTo()**: Kutsuu `route()`. $O(E)$.
+
+### Muita Mietteitä
+
+Metodien toteutus oli luentodiojen pseudokoodin avulla suoraviivaista, mutta `hasCycles()`-metodia toteuttaessa tuli vastaan kummallinen bugi missä `isDisconnected()`-metodin kutsuminen sai jälkeen tulevan `getEdges()`-kutsun palauttamaan `null`. Syy löyty `disconnectedVertices()`-metodi jossa oli koodinpätkä
+
+```java
+Set<Vertex<T>> notVisited = new HashSet<>();
+notVisited = getVertices();
+---------
+notVisited.removeAll(visited);
+```
+
+`getVertices()` sisältää kutsun `keySet()` joka ensimmäisellä kutsulla luo setin ja palauttaa sen myöhemmillä kutsuilla. Asettamalla `notVisited = getVertices();`, `notVisited` osoitti tähän samaiseen settiin josta `notVisited.removeAll(visited);` sitten poisti solmuja. Kun `hasCycles()` sitten myöhemmin kutsui `getVertices()`, se palautti vajaan setin.  
+Ongelma korjaantui vaihtamalla `notVisited`-alustuksen tilalle `Set<Vertex<T>> notVisited = new HashSet<>(getVertices());` joka luo kopion `getVertices()` setistä.
+
+Djikstran algoritmiä toteuttaessa törmäsin ongelmaan, missä testien mukaan löytämäni lyhimmän polun pituus oli aina yhden lyhyempi kuin mitä pitäisi. Olin ymmärtänyt `result.path`-muuttujan tarkoituksen väärin ja pistänyt sinne lyhimmän polun reunat enkä solmuja.
